@@ -70,3 +70,4 @@ vendor
 # local Jekyll files
 _site
 .jekyll-metadata
+.Rproj.user
