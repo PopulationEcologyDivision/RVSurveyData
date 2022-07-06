@@ -94,11 +94,14 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   #Update the news file to reflect the most recent data available
   recentData <- unique(res$GSMISSIONS[,c("YEAR","SEASON")]) %>% dplyr::group_by(SEASON) %>% dplyr::top_n(1, YEAR)
   recentData <- recentData[order(-recentData$YEAR, -rank(recentData$SEASON)),]
-  newTxt <- paste0("# RVSurveyData Version",": ", utils::packageDescription('RVSurveyData')$Version,"\n",
-                   "* Data updated: ", format(Sys.Date(), '%Y/%m/%d'),"\n",
-                   "* Newest Data Available (by Season): ")
+  newTxt1 <- paste0("# RVSurveyData Version",": ", utils::packageDescription('RVSurveyData')$Version)
+  newTxt2 <- paste0("\nData updated: ", format(Sys.Date(), '%Y/%m/%d'))
+  newTxt3 <- paste0("\nNewest Data Available (by Season):")
+  newTxt4 <- " "
   filename=file.path(newsDir,'NEWS.md')
-  write(newTxt, file = filename, append = FALSE)
-  write(paste0("\t",apply(recentData,1,paste0, collapse='\t')), file = filename, append = T, sep = '\t')
-  
+  write(newTxt1, file = filename, append = FALSE)
+  write(newTxt2, file = filename, append = TRUE)
+  write(newTxt3, file = filename, append = TRUE)
+  write(newTxt4, file = filename, append = TRUE)
+  write(paste0(" \t",apply(recentData,1,paste0, collapse='\t')), file = filename, append = T, sep = '\t')
 }
