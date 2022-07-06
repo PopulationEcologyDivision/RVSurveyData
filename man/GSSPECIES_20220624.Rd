@@ -10,7 +10,7 @@ data.frame
 \item{CODE}{The numeric code used to identify the species.}
 \item{SPEC}{The scientific name of the species.}
 \item{COMM}{The common name of the species.}
-\item{COMMENTS}{xxx}
+\item{COMMENTS}{Most frequently used record previously used scientific name}
 \item{VALID_SPP}{Boolean field indicating if this is a valid, biological species or something else (e.g. life stage, etc)}
 \item{TSN}{ITIS Taxonomic Serial Number}
 \item{APHIAID}{WoRMS Aphia ID code}
@@ -25,6 +25,6 @@ data.frame
 GSSPECIES_20220624
 }
 \description{
-This is the new, improved Maritimes Species Code table.
+This is a new, improved Maritimes Species Code table.
 }
 \keyword{datasets}

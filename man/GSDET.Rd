@@ -11,7 +11,7 @@ data.frame
 \item{SETNO}{Each tow is assigned a numeric set identifier starting with 1 for the first tow and then assigned consecutively.}
 \item{SPEC}{Maritimes species code.}
 \item{FSHNO}{Unique number assigned within species and mission.}
-\item{FLEN}{xxx}
+\item{FLEN}{"Fish Length" - typically cm}
 \item{FSEX}{Sex of the specimen.}
 \item{FMAT}{Code for the observed maturity stage.}
 \item{FWT}{The round weight in grams of the specimen.}

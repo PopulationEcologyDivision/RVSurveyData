@@ -232,14 +232,14 @@
 
 #' @title GSSPECIES_20220624
 #' @name GSSPECIES_20220624
-#' @description This is the new, improved Maritimes Species Code table.
+#' @description This is a new, improved Maritimes Species Code table.
 #' @docType data
 #' @format data.frame
 #' \describe{
 #' \item{CODE}{The numeric code used to identify the species.}
 #' \item{SPEC}{The scientific name of the species.}
 #' \item{COMM}{The common name of the species.}
-#' \item{COMMENTS}{xxx}
+#' \item{COMMENTS}{Most frequently used record previously used scientific name}
 #' \item{VALID_SPP}{Boolean field indicating if this is a valid, biological species or something else (e.g. life stage, etc)}
 #' \item{TSN}{ITIS Taxonomic Serial Number}
 #' \item{APHIAID}{WoRMS Aphia ID code}
@@ -314,6 +314,18 @@
 #' \item{GEAR5}{xxx}
 #' }
 "GSVESSEL"
+
+#' @title GSWARPOUT Metadata
+#' @name GSWARPOUT
+#' @description This is the...
+#' @docType data
+#' @format data.frame
+#' \describe{
+#' \item{MISSION}{A 10 character field to identify the survey.  The first 3 character identifies the vessel (eg. NED), the next 4 characters identifies the year (eg. 2000) and the last 3 characters identifies the survey number within the year. (eg. 001). Example NED2000001.}
+#' \item{SETNO}{Each tow is assigned a numeric set identifier starting with 1 for the first tow and then assigned consecutively.}
+#' \item{WARPOUT}{Warp, in meters}
+#' }
+"GSWARPOUT"
 
 #' @title GSXTYPE Metadata
 #' @name GSXTYPE

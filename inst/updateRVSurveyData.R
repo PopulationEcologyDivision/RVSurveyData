@@ -49,8 +49,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                   ROracle::dbGetQuery(con, sqlStatement)
                 })
   names(res)<- allTbls
-  beepr::beep()
-  browser()
+  # beepr::beep()
   
   ## Various source tables need some tweaking to improve usability
   #GSINF: add decimal degrees version of coords

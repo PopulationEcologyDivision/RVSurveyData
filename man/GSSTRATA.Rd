@@ -7,7 +7,7 @@
 \format{
 data.frame
 \describe{
-\item{STRATA}{xxx}
+\item{STRATA}{survey stratum code}
 \item{MAJOR}{xxx}
 \item{MINOR}{xxx}
 \item{LATITUDE}{xxx}
