@@ -25,27 +25,33 @@ To view a particular data table, just load the package, and then issue a command
 
 ## Contents
 ### Scripts
-The only script in this repo is [updateRVSurveyData.R](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/inst/updateRVSurveyData.R).  This file is not included when the package is installed and only serves to extract the data, and add it to the package.  It does perform several small "convenience" tweaks to make the data a little easier to work with.  Please check that file to see exactly how these tweaks are performed, but they are described below:
+Scripts in this package are minimal - it is primarily a data package.
+[R/updateCheck.R](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/R/updateCheck.R) runs when the package is loaded, and informs the user if updated data is available.
 
-#### GSINF
+[R/listTbls.R](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/R/listTbls.R) simply returns a vector of the names of all of the included data tables.
+
+[inst/updateRVSurveyData.R](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/inst/updateRVSurveyData.R) is not a user- usable function, and only serves to extract the data and add it to the package.  It does perform several small "convenience" tweaks to make the data a little easier to work with.  Please check that file to see exactly how these tweaks are performed, but they are described below:
+
+#### GSINF Tweaks
 
 * COORDINATES: The source database stores coordinates in DDMM.MM.   These are retained, but have also been duplicated as *_DD, where the values have been converted to decimal degrees.
 * DEPTH (values): where DEPTH existed in the database, it is retained.  If missing, but values were present for DMIN and DMAX, DEPTH is populated with the average of these 2 values
 * DEPTH (units): The source database stores depth values in fathoms.  All depth fields have been duplicated as *_M, where the values have been converted to meters.
 
-#### GSCAT
+#### GSCAT Tweaks
 
 * Internally, this table includes a "SIZE_CLASS" field, which breaks down field-observations of a given species into manageable chunks based on different observed sizes of animals within a set.  This field has been removed, and all observations of a single species within a single set have had the weights and numbers of all size classes summed together. 
 
 ### Data
 Following is a list of all of the data objects included in this package.  Each is documented within the package, accessible via a command like `?GSCAT`. Links below go to the respective Rd files.  These files are are better formatted when viewed from within the package. 
 
-|||||
-| ------------- | ------------- | ----------- | ------------------- |
-|[GSAUX](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSAUX.Rd)|[GSFORCE](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSFORCE.Rd)|[GSMISSIONS](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSMISSIONS.Rd)| [GSSTRATUM](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSTRATUM.Rd)|
-|[GSCAT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSCAT.Rd)|[GSGEAR](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSGEAR .Rd)|[GSSEX](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSEX.Rd)| [GSVESSEL](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSVESSEL.Rd)|
-||[GSHOWOBT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSHOWOBT.Rd)|[GSSPEC](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPEC.Rd)| [GSWARPOUT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSWARPOUT.Rd)|
-|[GSCURNT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSCURNT.Rd)|[GSINF](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSINF.Rd)|[GSSPECIES](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPECIES.Rd)| [GSXTYPE](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSXTYPE.Rd) |
-|[GSDET](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSDET.Rd)|[GSMATURITY](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSMATURITY.Rd)|| [GSSPECIES_20220624*](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPECIES_20220624.Rd)|
-||||[GSSPECIES_TAX*](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPECIES_TAX.Rd)|
+|||
+| ------------- | ------------- | ----------- | 
+|[GSAUX](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSAUX.Rd)       | [GSINF](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSINF.Rd)           | [GSSPECIES](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPECIES.Rd)                    |
+|[GSCAT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSCAT.Rd)       | [GSMATURITY](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSMATURITY.Rd) | [GSSPEC](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPEC.Rd)                          |
+|[GSCURNT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSCURNT.Rd)   | [GSMISSIONS](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSMISSIONS.Rd) | [GSXTYPE](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSXTYPE.Rd)                        |
+|[GSDET](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSDET.Rd)       | [GSSEX](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSEX.Rd)           | [GSSPECIES_20220624*](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPECIES_20220624.Rd) |
+|[GSFORCE](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSFORCE.Rd)   | [GSSTRATUM](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSTRATUM.Rd)   | [GSSPECIES_TAX*](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPECIES_TAX.Rd)           |
+|[GSGEAR](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSGEAR .Rd)    | [GSVESSEL](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSVESSEL.Rd)     | |
+|[GSHOWOBT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSHOWOBT.Rd) | [GSWARPOUT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSWARPOUT.Rd)   | |
 \* These species-related tables are new (and draft), and include APHIAID information for each species.
