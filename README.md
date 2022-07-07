@@ -45,7 +45,7 @@ Scripts in this package are minimal - it is primarily a data package.
 ### Data
 Following is a list of all of the data objects included in this package.  Each is documented within the package, accessible via a command like `?GSCAT`. Links below go to the respective Rd files.  These files are are better formatted when viewed from within the package. 
 
-|||
+||||
 | ------------- | ------------- | ----------- | 
 |[GSAUX](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSAUX.Rd)       | [GSINF](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSINF.Rd)           | [GSXTYPE](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSXTYPE.Rd)                        |
 |[GSCAT](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSCAT.Rd)       | [GSMATURITY](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSMATURITY.Rd) | [GSSPEC](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/man/GSSPEC.Rd)                          |
