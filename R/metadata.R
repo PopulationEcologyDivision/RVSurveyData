@@ -30,27 +30,27 @@
 #' }
 "GSCAT"
 
-#' @title GSCRUISELIST Metadata
-#' @name GSCRUISELIST
-#' @description This table describes all of the different survey cruises (e.g. when and where they went, etc)
-#' @docType data
-#' @format data.frame
-#' \describe{
-#' \item{YEAR}{The year of the survey.}
-#' \item{NAFO}{The NADO divisions in which the survey occurred (e.g. 4VWX5; 5Z)}
-#' \item{VESL}{A 3 character identifying the vessel (eg. NED)}
-#' \item{CRUNO}{A 3 digit code identifying the survey number within the year. (eg. 001)}
-#' \item{SDATE}{The start date of the cruise}
-#' \item{EDATE}{The end date of the cruise}
-#' \item{SETS}{The number of sets conducted during the survey}
-#' \item{PURPOSE}{The purpose of the cruise}
-#' \item{LOCALE}{Description of the area in which the survey occurred}
-#' \item{DATASOURCE}{xxx}
-#' \item{DATASTATUS}{xxx}
-#' \item{DATALOCATION}{Physical location of hard copy data}
-#' \item{MISSION}{A 10 character field to identify the survey.  The first 3 character identifies the vessel (eg. NED), the next 4 characters identifies the year (eg. 2000) and the last 3 characters identifies the survey number within the year. (eg. 001). Example NED2000001.}
-#' }
-"GSCRUISELIST"
+# @title GSCRUISELIST Metadata
+# @name GSCRUISELIST
+# @description This table describes all of the different survey cruises (e.g. when and where they went, etc)
+# @docType data
+# @format data.frame
+# \describe{
+# \item{YEAR}{The year of the survey.}
+# \item{NAFO}{The NADO divisions in which the survey occurred (e.g. 4VWX5; 5Z)}
+# \item{VESL}{A 3 character identifying the vessel (eg. NED)}
+# \item{CRUNO}{A 3 digit code identifying the survey number within the year. (eg. 001)}
+# \item{SDATE}{The start date of the cruise}
+# \item{EDATE}{The end date of the cruise}
+# \item{SETS}{The number of sets conducted during the survey}
+# \item{PURPOSE}{The purpose of the cruise}
+# \item{LOCALE}{Description of the area in which the survey occurred}
+# \item{DATASOURCE}{xxx}
+# \item{DATASTATUS}{xxx}
+# \item{DATALOCATION}{Physical location of hard copy data}
+# \item{MISSION}{A 10 character field to identify the survey.  The first 3 character identifies the vessel (eg. NED), the next 4 characters identifies the year (eg. 2000) and the last 3 characters identifies the survey number within the year. (eg. 001). Example NED2000001.}
+# }
+#"GSCRUISELIST"
 
 #' @title GSCURNT Metadata
 #' @name GSCURNT
@@ -268,19 +268,19 @@
 #' }
 "GSSPECIES_TAX"
 
-#' @title GSSTRATA Metadata
-#' @name GSSTRATA
-#' @description This appears to be a table that could be used to plot the strata.  
-#' @docType data
-#' @format data.frame
-#' \describe{
-#' \item{STRATA}{survey stratum code}
-#' \item{MAJOR}{xxx}
-#' \item{MINOR}{xxx}
-#' \item{LATITUDE}{xxx}
-#' \item{LONGITUDE}{xxx}
-#' }
-"GSSTRATA"
+# @title GSSTRATA Metadata
+# @name GSSTRATA
+# @description This appears to be a table that could be used to plot the strata.  
+# @docType data
+# @format data.frame
+# \describe{
+# \item{STRATA}{survey stratum code}
+# \item{MAJOR}{xxx}
+# \item{MINOR}{xxx}
+# \item{LATITUDE}{xxx}
+# \item{LONGITUDE}{xxx}
+# }
+# "GSSTRATA"
 
 #' @title GSSTRATUM Metadata
 #' @name GSSTRATUM

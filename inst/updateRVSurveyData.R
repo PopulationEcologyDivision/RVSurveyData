@@ -35,11 +35,8 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   library(beepr)
   newsDir = "c:/git/PopulationEcologyDivision/RVSurveyData"
   
-  allTbls = c("GSAUX", "GSCAT", "GSCRUISELIST", "GSCURNT", "GSDET", 
-              "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
-              "GSMISSIONS", "GSSEX","GSSPEC", "GSSPECIES", "GSSTRATA", 
-              "GSSTRATUM", "GSVESSEL", "GSXTYPE",
-              "GSSPECIES_20220624", "GSSPECIES_TAX")
+
+  allTbls = listTbls()
   
   # make connection and extract all data to a list
   con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), fn.oracle.username, fn.oracle.password, fn.oracle.dsn)
