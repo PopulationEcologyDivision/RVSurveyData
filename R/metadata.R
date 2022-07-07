@@ -297,23 +297,23 @@
 #' }
 "GSSTRATUM"
 
-#' @title GSVESSEL Metadata
-#' @name GSVESSEL
-#' @description This is the...
-#' @docType data
-#' @format data.frame
-#' \describe{
-#' \item{VESEL}{A 1 digit code used to identify the vessel used in the survey}
-#' \item{VNAME}{Name of the vessel}
-#' \item{BDATE}{xxx}
-#' \item{EDATE}{xxx}
-#' \item{GEAR1}{xxx}
-#' \item{GEAR2}{xxx}
-#' \item{GEAR3}{xxx}
-#' \item{GEAR4}{xxx}
-#' \item{GEAR5}{xxx}
-#' }
-"GSVESSEL"
+# @title GSVESSEL Metadata
+# @name GSVESSEL
+# @description This is the...
+# @docType data
+# @format data.frame
+# \describe{
+# \item{VESEL}{A 1 digit code used to identify the vessel used in the survey}
+# \item{VNAME}{Name of the vessel}
+# \item{BDATE}{xxx}
+# \item{EDATE}{xxx}
+# \item{GEAR1}{xxx}
+# \item{GEAR2}{xxx}
+# \item{GEAR3}{xxx}
+# \item{GEAR4}{xxx}
+# \item{GEAR5}{xxx}
+# }
+#"GSVESSEL"
 
 #' @title GSWARPOUT Metadata
 #' @name GSWARPOUT
