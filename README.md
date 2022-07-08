@@ -1,9 +1,9 @@
 # RVSurveyData
 A package facilitating sharing of the DFO Maritimes Groundfish Survey Data with external partners
 
-Please see the ["NEWS"](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/NEWS.md) file form information about the status of the data. (e.g. most recent survey)
+Please see the ["NEWS"](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/NEWS.md) file form information about the status of the data (e.g. most recent survey).
 
-The idea for this repo came out of discussions within the [WGNAEO](https://www.ices.dk/community/groups/Pages/WGNAEO.aspx "Working Group on Northwest Atlantic Ecosystem Observations").  By providing an authoritative dataset in a single format, it is hoped that we can facilitate collaboration on analyses of this data.  While no functions/scripts are expected to be added to this package, they might be contributed via a sister package such as [RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/). RVTransmogrifier is envisioned as a repo solely dedicated to the transformation of RV survey data into formats required by various partners.
+This repo provides an authoritative version of the Maritimes RV Survey data in a single format closely resembling the internally-used data structure.   This data is contributed to several different institutions in different formats, and it is anticipated that data transformations can be made more repeatable when run against a standard set of data, rather than against a series of potentially different SQL extractions.   Beyond any general 'housekeeping functions', no functions/scripts are expected to be added to this package.  Instead, these will be contributed via a sister package such as [RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/).  RVTransmogrifier is envisioned as a repo solely dedicated to the transformation of this RV survey data into formats required by various partners.
 
 ## Installation
 To install this package, run `devtools::install_github('PopulationEcologyDivision/RVSurveyData')`
