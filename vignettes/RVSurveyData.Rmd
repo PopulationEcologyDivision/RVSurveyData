@@ -9,14 +9,22 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{RVSurveyData}
   %\VignetteEngine{knitr::rmarkdown}
+  % \VignetteDepends{dplyr} 
+  % \VignetteDepends{ggplot2} 
+  % \VignetteDepends{mapdata} 
+  % \VignetteDepends{sf} 
   \usepackage[utf8]{inputenc}
 ---
 ```{r load-packages, include=FALSE}
+  if (!require(dplyr)) install.packages('dplyr')  
+  if (!require(ggplot2)) install.packages('ggplot2')  
+  if (!require(mapdata)) install.packages('mapdata')  
+  if (!require(sf)) install.packages('sf')  
 library(RVSurveyData)
 library(dplyr)
 library(ggplot2)
 library(mapdata)
-library(sf)
+
 ```
 This repo provides an authoritative version of the Maritimes RV Survey data in a single format closely resembling the internally-used data structure.   This data is contributed to several different institutions in different formats, and it is anticipated that data transformations can be made more repeatable when run against a standard set of data, rather than against a series of potentially different SQL extractions.   No functions/scripts are expected to be added to this package.  Instead, these will be contributed via the sister package [RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/).  RVTransmogrifier is dedicated to the transformation of this RV survey data into formats required by various partners.
 

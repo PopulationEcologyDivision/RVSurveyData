@@ -6,8 +6,13 @@ Maintainer: Mike McMahon <Mike.McMahon@dfo-mpo.gc.ca>
 Description: This package contains selected tables from the Maritimes Groundfish Survey Database and several association spatial objects.
 Depends:
     R (>= 2.10)
-Suggests: knitr, 
-          rmarkdown
+Suggests: 
+          dplyr,
+          ggplot2,
+          knitr, 
+          mapdata,
+          rmarkdown,
+          sf
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8

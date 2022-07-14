@@ -6,7 +6,6 @@
 #' @author  Mike McMahon, \email{Mike.McMahon@@dfo-mpo.gc.ca}
 #' @note This code is stolen (rather than 'required') from Mar.utils to minimize package 
 #' dependencies.  I wrote it, so I'm allowed.  :)
-#' @export
 updateCheck<-function(gitPkg = NULL){
   
   verCleaner<-function(dirtyVer = NULL){
