@@ -31,7 +31,6 @@ data.frame
 \item{GEAR}{A single digit numeric code to identify the gear being used.}
 \item{AUX}{A single digit numeric code to identify any auxiliary gear being used.}
 \item{DEPTH}{The average of start and end depth}
-\item{ETIME}{The local time at the end of the tow.}
 \item{REMARKS}{Any comments pertaining to set.}
 \item{START_DEPTH}{The bottom depth at start of a set, in fathoms.}
 \item{END_DEPTH}{The bottom depth at end of a set, in fathoms.}

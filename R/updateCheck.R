@@ -36,11 +36,11 @@ updateCheck<-function(gitPkg = NULL){
   remoteVer = verCleaner(remote)
   
   if (localVer == remoteVer){
-    cat(paste0("\n", gitPkg,": Latest and greatest version confirmed","\n"))
+    cat(paste0("\n", gitPkg,": Current version confirmed","\n"))
   }else if (localVer > remoteVer){
     cat("\n","Push to Github!")
   }else if (localVer < remoteVer){
-    cat(paste0("\n", gitPkg, ": Old version detected -- v.",gsub('^([0-9]{4})([0-9]{2})([0-9]{2})$','\\1\\.\\2\\.\\3',remoteVer)," is now available"))
+    cat(paste0("\n", gitPkg, ": Older version detected (",gsub('^([0-9]{4})([0-9]{2})([0-9]{2})$','\\1\\.\\2\\.\\3',remoteVer)," now available)"))
     cat("\n","You can run the following code to update this package:")
     cat(paste("\n","devtools::install_github('",gitPkg,"')", sep=""),"\n")
   }

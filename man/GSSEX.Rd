@@ -15,6 +15,6 @@ data.frame
 GSSEX
 }
 \description{
-This is the
+This is the code table for the sex codes.
 }
 \keyword{datasets}

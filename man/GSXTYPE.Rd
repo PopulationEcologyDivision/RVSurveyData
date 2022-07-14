@@ -15,6 +15,6 @@ data.frame
 GSXTYPE
 }
 \description{
-This is the...
+This is the code table for the (GSINF) TYPE codes.
 }
 \keyword{datasets}

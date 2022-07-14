@@ -153,7 +153,6 @@
 #' \item{GEAR}{A single digit numeric code to identify the gear being used.}
 #' \item{AUX}{A single digit numeric code to identify any auxiliary gear being used.}
 #' \item{DEPTH}{The average of start and end depth}
-#' \item{ETIME}{The local time at the end of the tow.}
 #' \item{REMARKS}{Any comments pertaining to set.}
 #' \item{START_DEPTH}{The bottom depth at start of a set, in fathoms.}
 #' \item{END_DEPTH}{The bottom depth at end of a set, in fathoms.}
@@ -317,7 +316,7 @@
 
 #' @title GSWARPOUT Metadata
 #' @name GSWARPOUT
-#' @description This is the...
+#' @description This is the table of the WARP associated with each fishing event.
 #' @docType data
 #' @format data.frame
 #' \describe{
@@ -329,7 +328,7 @@
 
 #' @title GSXTYPE Metadata
 #' @name GSXTYPE
-#' @description This is the...
+#' @description This is the code table for the (GSINF) TYPE codes.
 #' @docType data
 #' @format data.frame
 #' \describe{
@@ -340,7 +339,7 @@
 
 #' @title GSMATURITY Metadata
 #' @name GSMATURITY
-#' @description This is the  
+#' @description This is the code table for the maturity codes. 
 #' @docType data
 #' @format data.frame
 #' \describe{
@@ -351,7 +350,7 @@
 
 #' @title GSSEX Metadata
 #' @name GSSEX
-#' @description This is the  
+#' @description This is the code table for the sex codes. 
 #' @docType data
 #' @format data.frame
 #' \describe{
@@ -359,3 +358,24 @@
 #' \item{DESCRIPTION}{Description of sex code}
 #' }
 "GSSEX"
+
+#' @title nafo_sf Metadata
+#' @name nafo_sf
+#' @description This is an sf object of the NAFO subunits used by DFO Maritimes.   
+#' @docType data
+#' @format an sf object with a CRS of 4326 (i.e. WGS84)
+#' \describe{
+#' \item{NAFO}{This is the identifier for each NAFO subunit}
+#' }
+"nafo_sf"
+
+#' @title strataMar_sf Metadata
+#' @name strataMar_sf
+#' @description This is an sf object of the strata used by DFO Maritimes.
+#' @docType data
+#' @format an sf object with a CRS of 4326 (i.e. WGS84)
+#' \describe{
+#' \item{STRATA_ID}{This is the identifier used for each strata}
+#' \item{AREA_KM}{This is the area for each strata in km^2}
+#' }
+"strataMar_sf"

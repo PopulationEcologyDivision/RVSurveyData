@@ -16,6 +16,6 @@ data.frame
 GSWARPOUT
 }
 \description{
-This is the...
+This is the table of the WARP associated with each fishing event.
 }
 \keyword{datasets}

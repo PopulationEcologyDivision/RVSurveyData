@@ -15,6 +15,6 @@ data.frame
 GSMATURITY
 }
 \description{
-This is the
+This is the code table for the maturity codes.
 }
 \keyword{datasets}

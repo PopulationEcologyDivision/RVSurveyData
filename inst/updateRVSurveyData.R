@@ -7,7 +7,6 @@
 #' @param fn.oracle.dsn default is \code{"PTRAN} This is your dsn/ODBC identifier for accessing 
 #' oracle objects. 
 #' @author  Mike McMahon, \email{Mike.McMahon@@dfo-mpo.gc.ca}
-#' @export
 updateRVSurveyData<-function(fn.oracle.username = NULL, 
                              fn.oracle.password = NULL, 
                              fn.oracle.dsn = "PTRAN"
@@ -32,11 +31,13 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   library(purrr)
   library(dplyr)
   library(devtools)
-  library(beepr)
-  newsDir = "c:/git/PopulationEcologyDivision/RVSurveyData"
   
 
-  allTbls = listTbls()
+  allTbls = c("GSAUX", "GSCAT", "GSCURNT", "GSDET", 
+              "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
+              "GSMISSIONS", "GSSEX","GSSPEC", "GSSPECIES", 
+              "GSSTRATUM", "GSWARPOUT", "GSXTYPE",
+              "GSSPECIES_20220624", "GSSPECIES_TAX")
   
   # make connection and extract all data to a list
   con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), fn.oracle.username, fn.oracle.password, fn.oracle.dsn)
@@ -69,6 +70,11 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   res$GSINF$START_DEPTH_M <- fathoms_to_meters(res$GSINF$START_DEPTH)
   res$GSINF$END_DEPTH_M   <- fathoms_to_meters(res$GSINF$END_DEPTH)
   
+  #GSINF: remove the time component from SDATE - "TIME" field should be used instead.
+  # remove ETIME - for end time, best to add tow duration to TIME field 
+  res$GSINF$SDATE <- as.Date(res$GSINF$SDATE)
+  
+  res$GSINF$ETIME <- NULL
   #GSCAT: following combines numbers and weights for different size classes within a set
   #this drops MARKET (never populated) & REMARKS. 
   res$GSCAT <- res$GSCAT %>%
@@ -88,17 +94,4 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
     do.call("use_data", list(as.name(name), overwrite = TRUE))
   })
   
-  #Update the news file to reflect the most recent data available
-  recentData <- unique(res$GSMISSIONS[,c("YEAR","SEASON")]) %>% dplyr::group_by(SEASON) %>% dplyr::top_n(1, YEAR)
-  recentData <- recentData[order(-recentData$YEAR, -rank(recentData$SEASON)),]
-  newTxt1 <- paste0("# RVSurveyData Version",": ", utils::packageDescription('RVSurveyData')$Version)
-  newTxt2 <- paste0("\nData updated: ", format(Sys.Date(), '%Y/%m/%d'))
-  newTxt3 <- paste0("\nNewest Data Available (by Season):")
-  newTxt4 <- " "
-  filename=file.path(newsDir,'NEWS.md')
-  write(newTxt1, file = filename, append = FALSE)
-  write(newTxt2, file = filename, append = TRUE)
-  write(newTxt3, file = filename, append = TRUE)
-  write(newTxt4, file = filename, append = TRUE)
-  write(paste0(" \t",apply(recentData,1,paste0, collapse='\t')), file = filename, append = T, sep = '\t')
 }
