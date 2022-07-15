@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mike McMahon" />
 
-<meta name="date" content="2022-07-14" />
+<meta name="date" content="2022-07-15" />
 
 <title>RVSurveyData</title>
 
@@ -336,7 +336,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h3 class="subtitle">A package facilitating sharing of the DFO Maritimes
 Groundfish Survey Data with external partners.</h3>
 <h4 class="author">Mike McMahon</h4>
-<h4 class="date">July 14, 2022</h4>
+<h4 class="date">July 15, 2022</h4>
 
 
 
@@ -445,7 +445,7 @@ bemoved, as has <code>GSINF$ETIME</code>. For the start time of the tow,
 one should use the “TIME” field. To determine the end time of the tow,
 add the tow duration (i.e. “DUR”) to the “TIME”.</em></p>
 <p><em>When joining GSINF to GSCAT, it must be joined using
-<strong>both</strong> “MISSION” <strong>and</strong> “SETNO”</em></p>
+<strong>both</strong> “MISSION” <strong>and</strong> “SETNO”.</em></p>
 </div>
 <div id="gscat" class="section level3">
 <h3>GSCAT</h3>
@@ -461,7 +461,7 @@ the weight.</li>
 despite the <code>GSCAT$TOTNUM</code> indicating that at least one
 individual was caught. Set weights were reported to the nearest kg, and
 this is due to the measured weight not registering on the old spring
-balances (they had a precision of 1kg).<br />
+balances (which had a precision of 1kg).<br />
 </li>
 <li>SIZE_CLASS - Within the source database, this table includes a field
 called “SIZE_CLASS” which is not present here. This field is used to
@@ -472,7 +472,7 @@ the weights and numbers of all size classes summed together.</li>
 </ul>
 <p><em>When joining to GSCAT to GSDET, it must be joined using
 <strong>all three</strong> of the fields “MISSION”, “SETNO”
-<strong>and</strong> “SPEC</em></p>
+<strong>and</strong> “SPEC”.</em></p>
 </div>
 <div id="gsdet" class="section level3">
 <h3>GSDET</h3>
@@ -491,7 +491,7 @@ species will be in the standard strata).</li>
 </ul>
 <p><em>When joining to GSDET to GSCAT, it must be joined using
 <strong>all three</strong> of the fields “MISSION”, “SETNO”
-<strong>and</strong> “SPEC</em></p>
+<strong>and</strong> “SPEC”.`</em></p>
 </div>
 <div id="notes-on-species-identification" class="section level3">
 <h3>Notes on Species Identification</h3>

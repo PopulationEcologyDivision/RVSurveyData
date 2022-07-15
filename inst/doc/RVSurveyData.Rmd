@@ -5,7 +5,11 @@ date: "`r format(Sys.time(), '%B %d, %Y')`"
 author: "Mike McMahon"
 email: "Mike.McMahon@dfo-mpo.gc.ca"
 affiliation: "Population Ecology Division - Fisheries and Oceans Canada"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette: default
+  rmarkdown::pdf_document: 
+    engine: pdfLaTeX
+  
 vignette: >
   %\VignetteIndexEntry{RVSurveyData}
   %\VignetteEngine{knitr::rmarkdown}
@@ -101,15 +105,15 @@ ggplot() +
 
 *The "time" component of `GSINF$SDATE` has been bemoved, as has `GSINF$ETIME`.  For the start time of the tow, one should use the "TIME" field. To determine the end time of the tow, add the tow duration (i.e. "DUR") to the "TIME".*
 
-*When joining GSINF to GSCAT, it must be joined using __both__ "MISSION" __and__ "SETNO"*
+*When joining GSINF to GSCAT, it must be joined using __both__ "MISSION" __and__ "SETNO".*
 
 ### GSCAT
 * SAMPWGT - The SAMPWGT is the combined weight of the individuals that were looked at individually, and should be close to the sum of the individual values of FWT in GSDET.
 * TOTWGT/TOTNO - When a trawl is hauled, all of the individuals for a given species are weighed and counted. These values become TOTWGT and TOTNO in GSCAT. For huge catches, the TOTNO is sometimes calculated from the weight.
-* Cases exist where the `GSCAT$TOTWGT` is reported a "0" despite the `GSCAT$TOTNUM` indicating that at least one individual was caught.  Set weights were reported to the nearest kg, and this is due to the measured weight not registering on the old spring balances (they had a precision of 1kg).  
+* Cases exist where the `GSCAT$TOTWGT` is reported a "0" despite the `GSCAT$TOTNUM` indicating that at least one individual was caught.  Set weights were reported to the nearest kg, and this is due to the measured weight not registering on the old spring balances (which had a precision of 1kg).  
 * SIZE_CLASS -  Within the source database, this table includes a field called "SIZE_CLASS" which is not present here.  This field is used to facilitate at-sea sampling by break a species into manageable chunks based on different observed sizes of animals within a set.  For this table, all observations of a single species within a single set have had the weights and numbers of all size classes summed together.
 
-*When joining to GSCAT to GSDET, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC*
+*When joining to GSCAT to GSDET, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".*
 
 ### GSDET
 * FLEN is generally in cm, with the caveats below: 
@@ -117,7 +121,7 @@ ggplot() +
   + For herring, it switched from fork length in cm to total length in mm in SUMMER 2016  (missions "TEL2016002","TEL2016003" were still measured in cm). 
   + For several grenadier species, we have started switching from ‘fork length’ to pre-anal fin length.  This is only for very deep tows, where these species are regularly observed (It is not likely any of these species will be in the standard strata).
 
-*When joining to GSDET to GSCAT, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC*
+*When joining to GSDET to GSCAT, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".`*
 
 ### Notes on Species Identification
 Not all species have always been confidently identified during the survey.  The standard ID guide used is [Scott and Scott, Atlantic fishes of Canada](https://www.biblio.com/book/atlantic-fishes-canada-scott-w-b/d/570660430?aid=frg&gclid=CjwKCAjw_b6WBhAQEiwAp4HyIKxmnSMPiEyJYFjmRXuPpNI5RFBAMJBjxQBI107eFItGDaXb9NmFNhoCDfQQAvD_BwE), which was published in 1988.  The guide available prior to that was less detailed, and had a number of issues, such as it did not distinguish between Red Hake and White Hake.  Only ~65 species have been reliably identified since the start of the survey (i.e. 1970).  These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`.  

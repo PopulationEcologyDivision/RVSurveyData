@@ -5,3 +5,8 @@
 tools::buildVignettes(dir = ".", tangle=TRUE)
 dir.create("inst/doc")
 file.copy(dir("vignettes", full.names=TRUE), "inst/doc", overwrite=TRUE)
+
+#change 
+#Rmd from output: rmarkdown::html_vignette
+#         output: pdf_document 
+#to create a pdf
