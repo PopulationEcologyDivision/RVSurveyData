@@ -379,3 +379,15 @@
 #' \item{AREA_KM}{This is the area for each strata in km^2}
 #' }
 "strataMar_sf"
+
+#' @title strataMar4VSW_sf Metadata
+#' @name strataMar4VSW_sf
+#' @description This is an sf object of the strata used by DFO Maritimes.  This strata file is used
+#' exclusively with the 4VSW survey data.
+#' @docType data
+#' @format an sf object with a CRS of 4326 (i.e. WGS84)
+#' \describe{
+#' \item{STRATA_ID}{This is the identifier used for each strata}
+#' \item{AREA_KM}{This is the area for each strata in km^2}
+#' }
+"strataMar4VSW_sf"

@@ -66,7 +66,7 @@ Note that `GSSPECIES_20220624` and `GSSPECIES_TAX` are new (and draft), and incl
 
 #### Geospatial Data
 
-In addition to the survey data, two `sf` objects are included for convenience - the Maritimes strata (i.e. `strataMar_sf`) and the NAFO subunits (i.e. `nafo_sf`). Both are in WGS84 (i.e. CRS:4326).
+In addition to the survey data, three `sf` objects are included for convenience - the Maritimes strata (i.e. `strataMar_sf`), the Maritimes strata specific to the 4VSW survey (i.e. `strataMar4VSW_sf`) and the NAFO subunits (i.e. `nafo_sf`). All three are in WGS84 (i.e. CRS:4326).
 
 Plots of each are shown below:
 
@@ -78,6 +78,7 @@ reg[reg$long > 180, "long"] <- -360+reg[reg$long > 180, "long"]
 
 extStrata <- st_bbox(strataMar_sf)
 extNafo <- st_bbox(nafo_sf)
+extstrataMar4VSW_sf <- st_bbox(strataMar4VSW_sf)
 ```
 
 ```{R echo=FALSE}
@@ -88,6 +89,7 @@ ggplot() +
   coord_sf(xlim = c(extStrata[["xmin"]], extStrata[["xmax"]]), 
            ylim = c(extStrata[["ymin"]], extStrata[["ymax"]]), expand = TRUE) 
 ```
+
 ```{R  echo=FALSE}
 ggplot() + 
   ggtitle("nafo_sf") +
@@ -95,6 +97,15 @@ ggplot() +
   geom_polygon(data = reg, aes(x = long, y = lat, group = group), fill = "lightgrey", color = "grey25") +
   coord_sf(xlim = c(extNafo[["xmin"]], extNafo[["xmax"]]), 
            ylim = c(extNafo[["ymin"]], extNafo[["ymax"]]), expand = TRUE) 
+```
+
+```{R echo=FALSE}
+ggplot()+
+ggtitle("strataMar4VSW_sf") +
+geom_sf(data = strataMar4VSW_sf, fill="steelblue1") +
+geom_polygon(data = reg, aes(x = long, y = lat, group = group), fill = "lightgrey", color = "darkgrey") +
+coord_sf(xlim = c(extstrataMar4VSW_sf[["xmin"]], extstrataMar4VSW_sf[["xmax"]]),
+ylim = c(extstrataMar4VSW_sf[["ymin"]], extstrataMar4VSW_sf[["ymax"]]), expand = TRUE)
 ```
 
 ## Table-Specific Notes

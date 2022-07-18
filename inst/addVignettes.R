@@ -3,7 +3,7 @@
 #' @author  Mike McMahon, \email{Mike.McMahon@@dfo-mpo.gc.ca}
 
 tools::buildVignettes(dir = ".", tangle=TRUE)
-dir.create("inst/doc")
+# dir.create("inst/doc")
 file.copy(dir("vignettes", full.names=TRUE), "inst/doc", overwrite=TRUE)
 
 #change 
