@@ -6,8 +6,7 @@ author: "Mike McMahon"
 email: "Mike.McMahon@dfo-mpo.gc.ca"
 affiliation: "Population Ecology Division - Fisheries and Oceans Canada"
 output: 
-  rmarkdown::html_vignette: default
-  rmarkdown::pdf_document: 
+    pdf_document: default
     engine: pdfLaTeX
   
 vignette: >
@@ -81,15 +80,6 @@ extNafo <- st_bbox(nafo_sf)
 extstrataMar4VSW_sf <- st_bbox(strataMar4VSW_sf)
 ```
 
-```{R echo=FALSE}
-ggplot() + 
-  ggtitle("strataMar_sf") +
-  geom_sf(data = strataMar_sf, fill="steelblue1") +
-  geom_polygon(data = reg, aes(x = long, y = lat, group = group), fill = "lightgrey", color = "grey25") +
-  coord_sf(xlim = c(extStrata[["xmin"]], extStrata[["xmax"]]), 
-           ylim = c(extStrata[["ymin"]], extStrata[["ymax"]]), expand = TRUE) 
-```
-
 ```{R  echo=FALSE}
 ggplot() + 
   ggtitle("nafo_sf") +
@@ -97,6 +87,15 @@ ggplot() +
   geom_polygon(data = reg, aes(x = long, y = lat, group = group), fill = "lightgrey", color = "grey25") +
   coord_sf(xlim = c(extNafo[["xmin"]], extNafo[["xmax"]]), 
            ylim = c(extNafo[["ymin"]], extNafo[["ymax"]]), expand = TRUE) 
+```
+
+```{R echo=FALSE}
+ggplot() + 
+  ggtitle("strataMar_sf") +
+  geom_sf(data = strataMar_sf, fill="steelblue1") +
+  geom_polygon(data = reg, aes(x = long, y = lat, group = group), fill = "lightgrey", color = "grey25") +
+  coord_sf(xlim = c(extStrata[["xmin"]], extStrata[["xmax"]]), 
+           ylim = c(extStrata[["ymin"]], extStrata[["ymax"]]), expand = TRUE) 
 ```
 
 ```{R echo=FALSE}
