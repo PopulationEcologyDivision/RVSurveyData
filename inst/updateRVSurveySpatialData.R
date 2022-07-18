@@ -24,6 +24,7 @@ updateRVSurveySpatialData <- function(){
   strataMar4VSW_sf <- sf::st_read("inst/rawSpatial/4VsW_geom.shp")
   colnames(strataMar4VSW_sf)[colnames(strataMar4VSW_sf)=="StrataID"] <- "STRATA_ID"
   colnames(strataMar4VSW_sf)[colnames(strataMar4VSW_sf)=="Areakm"] <- "AREA_KM"
+  strataMar4VSW_sf$fid <- NULL
   strataMar4VSW_sf <- st_transform(strataMar4VSW_sf, crs = 4326)
   usethis::use_data(strataMar4VSW_sf, overwrite = TRUE)
 }
