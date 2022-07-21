@@ -4,4 +4,4 @@
 .Ruserdata
 inst/rawSpatial/
 inst/draft/
-inst/doc/
+vignettes/

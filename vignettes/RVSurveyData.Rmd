@@ -6,8 +6,8 @@ author: "Mike McMahon"
 email: "Mike.McMahon@dfo-mpo.gc.ca"
 affiliation: "Population Ecology Division - Fisheries and Oceans Canada"
 output: 
-    rmarkdown::html_vignette: default
-    rmarkdown::pdf_document: 
+ #   rmarkdown::html_vignette: default
+    pdf_document: 
     engine: pdfLaTeX
   
 vignette: >
@@ -110,7 +110,31 @@ Together, `dataLF` and `dataDETS` replace `GSDET`.
 
 `GSSPECIES_TAX` is new, and consists of the full taxonomic hierarchy associated with each aphiaid (i.e. Kingdom, Phylum, Class, etc).  This facilitates working with the data at taxonomic levels other than species. 
 
-#### Geospatial Data
+#### Species-Specific Information
+##### Identification
+
+Not all species have always been carefully enumerated during the survey.  The standard ID guide used is [Scott and Scott, Atlantic fishes of Canada](https://www.biblio.com/book/atlantic-fishes-canada-scott-w-b/d/570660430?aid=frg&gclid=CjwKCAjw_b6WBhAQEiwAp4HyIKxmnSMPiEyJYFjmRXuPpNI5RFBAMJBjxQBI107eFItGDaXb9NmFNhoCDfQQAvD_BwE), which was published in 1988.  The guide available prior to that was less detailed, and had a number of issues, such as it did not distinguish between Red Hake and White Hake.  
+
+The vessel in use prior to 1982 was the AT Cameron, a side trawler.  The catch was dumped from the net onto the deck, then sorted into wicker baskets and carried to the lab.  Many small specimens were missed or washed away.  As such, the number of species recorded did not always reflect the true diversity caught and the total numbers for some species will have underrepresented the actual catch. As  a result, only ~65 species have been provisionally identified as having reliable TOTNO and TOTWGT records since the start of the survey (i.e. 1970). These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`. 
+
+Only ~65 species have been reliably identified since the start of the survey (i.e. 1970).  These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`.  
+
+The number of species recorded increases after 1982, when the primary vessel changed to the Alfred Needler.  Catch on the Needler is dumped from the trawl into a hopper which discharges into the fishlab, so no specimens are lost prior to reaching the lab.  In the mid-90's, an effort began to better differentiate small sculpins and pouts more carefully, and as a result, the number of identified species increased.
+
+In 1998, records of many invertebrate groups began.  Many of these records were for broad species groupings (e.g. "Starfish").  Prior to 1998, there are some invertebrate records, but the focus was primarily on commercial species (e.g. scallop, squid, lobster). The proliferation of invertebrate records ~2005 is not a biological phenomenon, but an artifact of an expansion in species identification and commensurate data collection as staff attempted to differentiate all species previously recorded in species groups. 
+
+Below ~40cm, differentiation between Winter and Little skates is questionable and since the spring of 2014 most small specimens are recorded as Spec =1191.
+
+We are currently working to determine the dates at which other species began to be confidently identified and will continue to populate `GSSPECIES_20220624$IDD_CONFID_SINCE` as we are able.
+
+##### Measurements
+
+* `FLEN` is generally in cm, with the caveats below: 
+  + For Scallops, lobster and crabs it is mm. 
+  + Herring are measured in mm^[Herring were previously measured in cm, but the units have all been converted to converted to mm].  Starting in Summer 2016, measurement switched from fork length to total length. 
+  + For several grenadier species, we have started switching from ‘fork length’ to pre-anal fin length.  This is only for very deep tows, where these species are regularly observed (It is not likely any of these species will be in the standard strata).
+
+## Geospatial Data
 In addition to the survey data, three spatial `sf` objects are also included (all in WGS84/CRS:4326):
 * `strataMar_sf` - this is the "normal" Maritimes strata for use with the Spring, Summer and Fall Survey data;
 * `strataMar4VSW_sf` - this is the strata for use with the 4VSW survey (i.e. strata 396-411; Jan-April);
@@ -155,25 +179,3 @@ geom_polygon(data = reg, aes(x = long, y = lat, group = group), fill = "lightgre
 coord_sf(xlim = c(extstrataMar4VSW_sf[["xmin"]], extstrataMar4VSW_sf[["xmax"]]),
 ylim = c(extstrataMar4VSW_sf[["ymin"]], extstrataMar4VSW_sf[["ymax"]]), expand = TRUE)
 ```
-
-### Species-Specific Information
-#### Identification
-Not all species have always been carefully enumerated during the survey.  The standard ID guide used is [Scott and Scott, Atlantic fishes of Canada](https://www.biblio.com/book/atlantic-fishes-canada-scott-w-b/d/570660430?aid=frg&gclid=CjwKCAjw_b6WBhAQEiwAp4HyIKxmnSMPiEyJYFjmRXuPpNI5RFBAMJBjxQBI107eFItGDaXb9NmFNhoCDfQQAvD_BwE), which was published in 1988.  The guide available prior to that was less detailed, and had a number of issues, such as it did not distinguish between Red Hake and White Hake.  
-
-The vessel in use prior to 1982 was the AT Cameron, a side trawler.  The catch was dumped from the net onto the deck, then sorted into wicker baskets and carried to the lab.  Many small specimens were missed or washed away.  As such, the number of species recorded did not always reflect the true diversity caught and the total numbers for some species will have underrepresented the actual catch. As  a result, only ~65 species have been provisionally identified as having reliable TOTNO and TOTWGT records since the start of the survey (i.e. 1970). These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`. 
-
-Only ~65 species have been reliably identified since the start of the survey (i.e. 1970).  These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`.  
-
-The number of species recorded increases after 1982, when the primary vessel changed to the Alfred Needler.  Catch on the Needler is dumped from the trawl into a hopper which discharges into the fishlab, so no specimens are lost prior to reaching the lab.  In the mid-90's, an effort began to better differentiate small sculpins and pouts more carefully, and as a result, the number of identified species increased.
-
-In 1998, records of many invertebrate groups began.  Many of these records were for broad species groupings (e.g. "Starfish").  Prior to 1998, there are some invertebrate records, but the focus was primarily on commercial species (e.g. scallop, squid, lobster). The proliferation of invertebrate records ~2005 is not a biological phenomenon, but an artifact of an expansion in species identification and commensurate data collection as staff attempted to differentiate all species previously recorded in species groups. 
-
-Below ~40cm, differentiation between Winter and Little skates is questionable and since the spring of 2014 most small specimens are recorded as Spec =1191.
-
-We are currently working to determine the dates at which other species began to be confidently identified and will continue to populate `GSSPECIES_20220624$IDD_CONFID_SINCE` as we are able.
-
-# Measurements
-* `FLEN` is generally in cm, with the caveats below: 
-  + For Scallops, lobster and crabs it is mm. 
-  + Herring are measured in mm^[Herring were previously measured in cm, but the units have all been converted to converted to mm].  Starting in Summer 2016, measurement switched from fork length to total length. 
-  + For several grenadier species, we have started switching from ‘fork length’ to pre-anal fin length.  This is only for very deep tows, where these species are regularly observed (It is not likely any of these species will be in the standard strata).
