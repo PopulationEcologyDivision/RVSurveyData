@@ -12,28 +12,19 @@ data.frame
 \item{SDATE}{The date at the beginning of the tow.}
 \item{TIME}{The local time at the beginning of the tow.}
 \item{STRAT}{A numeric code to identify stratum.}
-\item{SLAT}{The latitude at the start of a tow}
-\item{SLONG}{The longitude at the start of a tow}
-\item{ELAT}{The latitude at the end of a tow}
-\item{ELONG}{The longitude at the end of a tow}
 \item{AREA}{A numeric code to identify the NAFO area.}
 \item{DUR}{Duration.}
 \item{DIST}{The actual tow distance in nautical miles.}
 \item{SPEED}{The average speed of the vessel over bottom, based on GPS, to the nearest tenth of a nautical mile.}
 \item{HOWD}{A single digit code to identify the source of information for the distance.}
 \item{HOWS}{A single digit code to identify the source of information for the speed.}
-\item{DMIN}{The minimum(shallowest) bottom depth, in fathoms observed during a tow.}
-\item{DMAX}{The maximum(deepest) bottom depth, in fathoms observed during a tow.}
 \item{WIND}{Wind Direction. In true degrees, between 0 and 360.}
 \item{FORCE}{A single digit code to identify wind force on the Beaufort scale}
 \item{CURNT}{A single digit code to identify the direction of the tide in relation to the vessel}
 \item{TYPE}{A numeric code to identify the experiment type.}
 \item{GEAR}{A single digit numeric code to identify the gear being used.}
 \item{AUX}{A single digit numeric code to identify any auxiliary gear being used.}
-\item{DEPTH}{The average of start and end depth}
 \item{REMARKS}{Any comments pertaining to set.}
-\item{START_DEPTH}{The bottom depth at start of a set, in fathoms.}
-\item{END_DEPTH}{The bottom depth at end of a set, in fathoms.}
 \item{SURFACE_TEMPERATURE}{Surface Temperature in celsius}
 \item{BOTTOM_TEMPERATURE}{Bottom temperature in celsius }
 \item{BOTTOM_SALINITY}{Bottom salinity measured in pounds per square unit. }

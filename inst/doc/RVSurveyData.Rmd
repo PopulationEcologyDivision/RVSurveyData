@@ -1,12 +1,14 @@
 ---
 title: "RVSurveyData"
-subtitle: "A package facilitating sharing of the DFO Maritimes Groundfish Survey Data with external partners."
+subtitle: "A package for sharing of the DFO Maritimes Groundfish Survey Data externally."
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 author: "Mike McMahon"
 email: "Mike.McMahon@dfo-mpo.gc.ca"
 affiliation: "Population Ecology Division - Fisheries and Oceans Canada"
 output: 
     rmarkdown::html_vignette: default
+    rmarkdown::pdf_document: 
+    engine: pdfLaTeX
   
 vignette: >
   %\VignetteIndexEntry{RVSurveyData}
@@ -28,7 +30,7 @@ library(ggplot2)
 library(mapdata)
 
 ```
-This repo provides an authoritative version of the Maritimes RV Survey data in a single format closely resembling the internally-used data structure.   This data is contributed to several different institutions in different formats, and it is anticipated that data transformations can be made more repeatable when run against a standard set of data, rather than against a series of potentially different SQL extractions.   No functions/scripts are expected to be added to this package.  Instead, these will be contributed via the sister package [RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/).  RVTransmogrifier is dedicated to the transformation of this RV survey data into formats required by various partners.
+This repo provides an authoritative version of the Maritimes RV Survey data in a single format closely resembling the internally-used data structure.   This data is contributed to several different institutions in different formats, and it is anticipated that data transformations can be made more repeatable when run against a standard set of data, rather than against a series of potentially different SQL extractions.   No functions/scripts are expected to be added to this package.  Instead, these will be contributed via the sister package [RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/).  RVTransmogrifier serves the dual purpose of transforming this data into formats required by various partners, as well as making it more broadly accessible.
 
 ## Disclaimer
 The Information is licensed “as is”, and the Information Provider excludes all representations, warranties, obligations, and liabilities, whether express or implied, to the maximum extent permitted by law.
@@ -41,11 +43,10 @@ Appropriate caution is necessary in the interpretation of results derived from t
 To install this package, run `devtools::install_github('PopulationEcologyDivision/RVSurveyData')`
 
 ## Contents
-Scripts in this package are minimal - it is primarily a data package.
-`updateCheck()` runs when the package is loaded, and informs the user if updated data is available.
+Scripts in this package are minimal - it is a data package.
+`updateCheck()` runs when the package is loaded, and informs the user if newer data is available.
 
 ### Data
-
 The most recent data currently available in this package is shown below (by Season):
 
 ```{r echo=FALSE}
@@ -54,17 +55,65 @@ recentData <- unique(GSMISSIONS[,c("YEAR","SEASON")]) %>% dplyr::group_by(SEASON
 recentData <- recentData[order( -rank(recentData$SEASON),-recentData$YEAR),] %>% as.data.frame()
 print(recentData)
 ```
-Following is a list of all of the data objects included in this package.  Each is documented within the package, accessible via a command like `?GSCAT`. 
+Following is a list of all of the data objects included in this package.  
 
 ```{r echo=FALSE}
 cat(paste(utils::data(package = "RVSurveyData")$results[,"Item"]),sep = "\n" )
 ```
 
-Note that `GSSPECIES_20220624` and `GSSPECIES_TAX` are new (and draft), and include APHIAID information for each species.
+_`dataLF` and `dataDETS` are new.  Please see the "Table-Specific Notes" for descriptions of each._
+
+## Usage
+[RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/) is a companion package for this data, and is recommended for data exploration.  To install that package, run `devtools::install_github('PopulationEcologyDivision/RVTransmogrifier')`.
+
+That being said, to view any particular data object, just load this package, and then issue a command like the following:
+```{R}
+library(RVSurveyData)
+head(GSCAT)
+```
+Documentation for each object is accessible via commands like `?GSCAT`. 
+
+## Table-Specific Notes
+### `dataDETS` & `dataLF`^[Derived from `GSDET`, which is not included in this package]
+Together, `dataLF` and `dataDETS` replace `GSDET`.
+
+#### `dataDETS`
+* `dataDETS` contains detailed information specific to individual animals for any specimens that had one or more of length, weight, age, sex and/or maturity measured.
+
+*When joining `dataDETS` to `GSCAT` or `dataLF`, they must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".`*
+
+#### `dataLF`
+`dataLF` contains the length-frequency data for each set (by sex), and where necessary, has had the values of `CLEN` (count at length) corrected for the effects of subsampling.
+
+*When joining `dataLF` to `GSCAT` or `dataDETS`, they must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".`*
+
+### GSINF
+* COORDINATE fields (i.e. `SLONG_DD`, `SLAT_DD`, `ELONG_DD` & `ELAT_DD`): These are the start and end coordinates, converted from DDMM.MM to decimal degrees.
+* DEPTH fields (i.e. `DEPTH_M`, `DMIN_M`, `DMAX_M`, `START_DEPTH_M` & `END_DEPTH_M`): All depth fields have been converted to meters.
+
+*The "time" component of `GSINF$SDATE` has been removed, as has `GSINF$ETIME`.  For the start time of the tow, one should use the "TIME" field. To determine the end time of the tow, add the tow duration (i.e. "DUR") to the "TIME".*
+
+*When joining GSINF to GSCAT, it must be joined using __both__ "MISSION" __and__ "SETNO".*
+
+### GSCAT
+* `SAMPWGT` -  Within the source database, this table includes a field called `SAMPWGT` which is not included here.  `SAMPWGT` is the weight of the individual sample retained for length frequency measurements and other biological detail sampling. For this dataset, the length frequency information and values of `TOTNO` (i.e. `dataLF`) have already been corrected for the effects of such "subsampling". 
+* `TOTWGT` & `TOTNO` - When a trawl is hauled, all of the individuals for a given species are weighed and counted. These values become `TOTWGT` and `TOTNO`. `TOTWGT` is always measured, but during subsampling events, not all individuals of a species are counted.  In these cases, `TOTNO` is calculated (i.e. `TOTWGT`/`SAMPWGT` * (sum of `CLEN`)).
+* `TOTWGT` is measured in kgs.
+* Up to and including Spring 1995, spring balances with a precision of 1kg were used during the survey. Because set weights were reported to the nearest kg, cases exist where the `GSCAT$TOTWGT` is reported a "0" despite the `GSCAT$TOTNUM` indicating that at least one individual was caught.  This is due to the measured weight not registering on the old spring balances (which had a precision of 1kg).  
+* `SIZE_CLASS` -  Within the source database, this table includes a field called `SIZE_CLASS` which is not included here.  `SIZE_CLASS` is used to facilitate at-sea sampling by breaking a catch of a particular species into manageable chunks based on different observed sizes of animals within a set.  For this table, all observations of a single species within a single set have had the weights and numbers of all size classes summed together.
+
+*When joining to `GSCAT` to `dataDETS` or `dataLF`, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".*
+
+### GSSPECIES
+`GSSPECIES` now includes [WoRMs AphiaIDs](https://www.marinespecies.org/about.php) and some additional information for each species.  
+
+`GSSPECIES_TAX` is new, and consists of the full taxonomic hierarchy associated with each aphiaid (i.e. Kingdom, Phylum, Class, etc).  This facilitates working with the data at taxonomic levels other than species. 
 
 #### Geospatial Data
-
-In addition to the survey data, three `sf` objects are included for convenience - the Maritimes strata (i.e. `strataMar_sf`), the Maritimes strata specific to the 4VSW survey (i.e. `strataMar4VSW_sf`) and the NAFO subunits (i.e. `nafo_sf`). All three are in WGS84 (i.e. CRS:4326).
+In addition to the survey data, three spatial `sf` objects are also included (all in WGS84/CRS:4326):
+* `strataMar_sf` - this is the "normal" Maritimes strata for use with the Spring, Summer and Fall Survey data;
+* `strataMar4VSW_sf` - this is the strata for use with the 4VSW survey (i.e. strata 396-411; Jan-April);
+* `nafo_sf` - these are the NAFO subunits referenced within GSINF, and commonly used within DFO Maritimes Fisheries Science.
 
 Plots of each are shown below:
 
@@ -106,48 +155,24 @@ coord_sf(xlim = c(extstrataMar4VSW_sf[["xmin"]], extstrataMar4VSW_sf[["xmax"]]),
 ylim = c(extstrataMar4VSW_sf[["ymin"]], extstrataMar4VSW_sf[["ymax"]]), expand = TRUE)
 ```
 
-## Table-Specific Notes
-### GSINF
-* COORDINATES: The source database stores coordinates in DDMM.MM.   These are retained, but have also been duplicated as *_DD, where the values have been converted to decimal degrees.
-* DEPTH (values): Where DEPTH existed in the database, it is retained.  If it is missing but values were present for both DMIN and DMAX, DEPTH is populated with the average of these 2 values.
-* DEPTH (units): The source database stores depth values in fathoms.  All depth fields have been duplicated as *_M, where the values have been converted to meters.
+### Species-Specific Information
+#### Identification
+Not all species have always been carefully enumerated during the survey.  The standard ID guide used is [Scott and Scott, Atlantic fishes of Canada](https://www.biblio.com/book/atlantic-fishes-canada-scott-w-b/d/570660430?aid=frg&gclid=CjwKCAjw_b6WBhAQEiwAp4HyIKxmnSMPiEyJYFjmRXuPpNI5RFBAMJBjxQBI107eFItGDaXb9NmFNhoCDfQQAvD_BwE), which was published in 1988.  The guide available prior to that was less detailed, and had a number of issues, such as it did not distinguish between Red Hake and White Hake.  
 
-*The "time" component of `GSINF$SDATE` has been bemoved, as has `GSINF$ETIME`.  For the start time of the tow, one should use the "TIME" field. To determine the end time of the tow, add the tow duration (i.e. "DUR") to the "TIME".*
+The vessel in use prior to 1982 was the AT Cameron, a side trawler.  The catch was dumped from the net onto the deck, then sorted into wicker baskets and carried to the lab.  Many small specimens were missed or washed away.  As such, the number of species recorded did not always reflect the true diversity caught and the total numbers for some species will have underrepresented the actual catch. As  a result, only ~65 species have been provisionally identified as having reliable TOTNO and TOTWGT records since the start of the survey (i.e. 1970). These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`. 
 
-*When joining GSINF to GSCAT, it must be joined using __both__ "MISSION" __and__ "SETNO".*
+Only ~65 species have been reliably identified since the start of the survey (i.e. 1970).  These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`.  
 
-### GSCAT
-* SAMPWGT - The SAMPWGT is the combined weight of the individuals that were looked at individually, and should be close to the sum of the individual values of FWT in GSDET.
-* TOTWGT/TOTNO - When a trawl is hauled, all of the individuals for a given species are weighed and counted. These values become TOTWGT and TOTNO in GSCAT. For huge catches, the TOTNO is sometimes calculated from the weight.
-* Cases exist where the `GSCAT$TOTWGT` is reported a "0" despite the `GSCAT$TOTNUM` indicating that at least one individual was caught.  Set weights were reported to the nearest kg, and this is due to the measured weight not registering on the old spring balances (which had a precision of 1kg).  
-* SIZE_CLASS -  Within the source database, this table includes a field called "SIZE_CLASS" which is not present here.  This field is used to facilitate at-sea sampling by break a species into manageable chunks based on different observed sizes of animals within a set.  For this table, all observations of a single species within a single set have had the weights and numbers of all size classes summed together.
+The number of species recorded increases after 1982, when the primary vessel changed to the Alfred Needler.  Catch on the Needler is dumped from the trawl into a hopper which discharges into the fishlab, so no specimens are lost prior to reaching the lab.  In the mid-90's, an effort began to better differentiate small sculpins and pouts more carefully, and as a result, the number of identified species increased.
 
-*When joining to GSCAT to GSDET, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".*
+In 1998, records of many invertebrate groups began.  Many of these records were for broad species groupings (e.g. "Starfish").  Prior to 1998, there are some invertebrate records, but the focus was primarily on commercial species (e.g. scallop, squid, lobster). The proliferation of invertebrate records ~2005 is not a biological phenomenon, but an artifact of an expansion in species identification and commensurate data collection as staff attempted to differentiate all species previously recorded in species groups. 
 
-### GSDET
-* FLEN is generally in cm, with the caveats below: 
-  + For Scallops, lobster and crabs it is mm. 
-  + For herring, it switched from fork length in cm to total length in mm in SUMMER 2016  (missions "TEL2016002","TEL2016003" were still measured in cm). 
-  + For several grenadier species, we have started switching from ‘fork length’ to pre-anal fin length.  This is only for very deep tows, where these species are regularly observed (It is not likely any of these species will be in the standard strata).
-
-*When joining to GSDET to GSCAT, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".`*
-
-### Notes on Species Identification
-Not all species have always been confidently identified during the survey.  The standard ID guide used is [Scott and Scott, Atlantic fishes of Canada](https://www.biblio.com/book/atlantic-fishes-canada-scott-w-b/d/570660430?aid=frg&gclid=CjwKCAjw_b6WBhAQEiwAp4HyIKxmnSMPiEyJYFjmRXuPpNI5RFBAMJBjxQBI107eFItGDaXb9NmFNhoCDfQQAvD_BwE), which was published in 1988.  The guide available prior to that was less detailed, and had a number of issues, such as it did not distinguish between Red Hake and White Hake.  Only ~65 species have been reliably identified since the start of the survey (i.e. 1970).  These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`.  
-
-In the mid-90's, an effort began to better differentiate sculpins and pouts more carefully, and as a result, the number of identified species increased.
-
-The proliferation of invertebrate records ~2005 is not a biological phenomenon, but an artifact of an expansion in species identification and commensurate data collection.  Prior to 2005, there are some invertebrate records, but the focus was primarily on commercial species (e.g. scallop, lobster).  
-
-Below ~40cm, differentiation between Winter and Little skates is questionable.
+Below ~40cm, differentiation between Winter and Little skates is questionable and since the spring of 2014 most small specimens are recorded as Spec =1191.
 
 We are currently working to determine the dates at which other species began to be confidently identified and will continue to populate `GSSPECIES_20220624$IDD_CONFID_SINCE` as we are able.
 
-## Usage
-[RVTransmogrifier](https://github.com/PopulationEcologyDivision/RVTransmogrifier/) is a companion package for this data, and includes tools for filtering this data to particular surveys, and for generating simple plots.  It is recommended  that it is used for data exploration. To install that package, run `devtools::install_github('PopulationEcologyDivision/RVTransmogrifier')`
-
-That being said, to view a particular data table, just load the package, and then issue a command:
-```{R}
-library(RVSurveyData)
-head(GSCAT)
-```
+# Measurements
+* `FLEN` is generally in cm, with the caveats below: 
+  + For Scallops, lobster and crabs it is mm. 
+  + Herring are measured in mm^[Herring were previously measured in cm, but the units have all been converted to converted to mm].  Starting in Summer 2016, measurement switched from fork length to total length. 
+  + For several grenadier species, we have started switching from ‘fork length’ to pre-anal fin length.  This is only for very deep tows, where these species are regularly observed (It is not likely any of these species will be in the standard strata).

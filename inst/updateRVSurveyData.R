@@ -27,15 +27,15 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   if (!require(purrr)) install.packages('purrr')  
   if (!require(dplyr)) install.packages('dplyr')
   if (!require(devtools)) install.packages('devtools')
-
+  
   library(purrr)
   library(dplyr)
   library(devtools)
   
-
+  
   allTbls = c("GSAUX", "GSCAT", "GSCURNT", "GSDET", 
               "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
-              "GSMISSIONS", "GSSEX","GSSPEC", "GSSPECIES", 
+              "GSMISSIONS", "GSSEX","GSSPEC", 
               "GSSTRATUM", "GSWARPOUT", "GSXTYPE",
               "GSSPECIES_20220624", "GSSPECIES_TAX")
   
@@ -47,7 +47,6 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                   ROracle::dbGetQuery(con, sqlStatement)
                 })
   names(res)<- allTbls
-  # beepr::beep()
   
   ## Various source tables need some tweaking to improve usability
   #GSINF: add decimal degrees version of coords
@@ -56,13 +55,16 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   res$GSINF$ELAT_DD  <- DDMM_to_DDDD(res$GSINF$ELAT)
   res$GSINF$ELONG_DD <- DDMM_to_DDDD(res$GSINF$ELONG)
   
-  #GSINF: populate DEPTH using DEPTH, DMIN and DMAX, as available
-  #(DEPTH used preferentially, otherwise use average of DMIN and DMAX)
+  res$GSINF$SLAT <- res$GSINF$SLONG <- res$GSINF$ELAT <- res$GSINF$ELONG <- NULL
+  
+  #GSINF: populate DEPTH using DEPTH, START_DEPTH and END_DEPTH, as available
+  #(DEPTH used preferentially, otherwise use average of START_DEPTH and END_DEPTH)
   res$GSINF$DEPTH_tmp <- NA
-  res$GSINF$DEPTH_tmp <- rowMeans(res$GSINF[,c("DMIN","DMAX")], na.rm = F) #first do average
+  res$GSINF$DEPTH_tmp <- rowMeans(res$GSINF[,c("START_DEPTH","END_DEPTH")], na.rm = F) #first do average
   res$GSINF[!is.na(res$GSINF$DEPTH),"DEPTH_tmp"]<- res$GSINF[!is.na(res$GSINF$DEPTH),"DEPTH"] #overwrite w depth, where avail
   res$GSINF$DEPTH <- res$GSINF$DEPTH_tmp
   res$GSINF$DEPTH_tmp <- NULL
+  
   #GSINF: add meters version of depths
   res$GSINF$DMIN_M        <- fathoms_to_meters(res$GSINF$DMIN)
   res$GSINF$DMAX_M        <- fathoms_to_meters(res$GSINF$DMAX)
@@ -70,24 +72,80 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   res$GSINF$START_DEPTH_M <- fathoms_to_meters(res$GSINF$START_DEPTH)
   res$GSINF$END_DEPTH_M   <- fathoms_to_meters(res$GSINF$END_DEPTH)
   
+  res$GSINF$DMIN <- res$GSINF$DMAX <- res$GSINF$DEPTH <- res$GSINF$START_DEPTH <- res$GSINF$END_DEPTH <- NULL
+  
   #GSINF: remove the time component from SDATE - "TIME" field should be used instead.
   # remove ETIME - for end time, best to add tow duration to TIME field 
   res$GSINF$SDATE <- as.Date(res$GSINF$SDATE)
-  
   res$GSINF$ETIME <- NULL
+  
+  #GSDET 
+  #NED 2016016 - first instance of measuring herring in mm - convert all prior data from cm to mm
+  res$GSDET[substr(res$GSDET$MISSION,4,7) <= 2016 & 
+              !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
+              !is.na(res$GSDET$FLEN),"FLEN"] <- res$GSDET[substr(res$GSDET$MISSION,4,7) <= 2016 & 
+                                                            !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
+                                                            !is.na(res$GSDET$FLEN),"FLEN"]*10
+  
+  
+  # 1 create table from GSDET with CLEN for each MISSION SETNO SPEC FLEN FSEX.
+  #  - need to correct CLEN for size_class 1st
+  #  - each set will be reduced to 1 record each combination of SPEC, FLEN and FSEX.
+  
+  dataLF <- res$GSDET
+  #get the totwgt and sampwgt for every mission/set/spec/size_class combo, and use them to create
+  #a ratio, and apply it to existing CLEN
+  dataLF <- merge(dataLF, 
+                  res$GSCAT[,c("MISSION", "SETNO", "SPEC", "SIZE_CLASS", "SAMPWGT","TOTWGT")],
+                  all.x = T, by = c("MISSION", "SETNO", "SPEC", "SIZE_CLASS"))
+  dataLF$CLEN_corr <- dataLF$CLEN
+  #if non-na values exist for totwgt and sampwgt (and are >0), use them to bump up CLEN
+  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_corr"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN"],3)
+  dataLF$CLEN <- NULL
+  colnames(dataLF)[colnames(dataLF)=="CLEN_corr"] <- "CLEN"
+  dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN")]
+  
+  dataLF <- dataLF %>%
+    group_by(MISSION, SETNO, SPEC, FSEX, FLEN) %>%
+    summarise(CLEN = sum(CLEN), .groups = "keep") %>%
+    as.data.frame()
+  
+  res$dataLF <- dataLF
+  rm(dataLF)
+  # 2 capture the other material from GSDET that is focused on individual measurements - e.g. FSHNO, 
+  #   SPECIMEN_ID, FMAT, FLEN, FSEX, FWT, AGE ...
+  #  - multiple internal, age-related fields are being dropped
+  
+  dataDETS <- res$GSDET
+  dataDETS <- dataDETS[,!names(dataDETS) %in% c("CLEN", "SIZE_CLASS")]
+  # remove internal fields
+  dataDETS <- dataDETS[,!names(dataDETS) %in% c("NANN", "EDGE", "CHKMRK", "AGER", "REMARKS" )]
+  # keep only informative records
+  dataDETS <- dataDETS[!is.na(dataDETS$FLEN) | !is.na(dataDETS$FSEX)| !is.na(dataDETS$FMAT)| !is.na(dataDETS$FWT)| !is.na(dataDETS$AGE),]
+  #reorder columns
+  dataDETS <- dataDETS[,c("MISSION", "SETNO", "SPEC", "FSHNO", "SPECIMEN_ID", "FLEN", "FSEX", "FMAT",  "FWT", "AGMAT", "AGE")]
+  
+  
+  res$dataDETS <- dataDETS
+  res$GSDET <-NULL
+  rm(dataDETS)
+  
   #GSCAT: following combines numbers and weights for different size classes within a set
   #this drops MARKET (never populated) & REMARKS. 
   res$GSCAT <- res$GSCAT %>%
-    group_by(MISSION, SETNO, SPEC, LENGTH_TYPE, LENGTH_UNITS, WEIGHT_TYPE, WEIGHT_UNITS) %>%
+    group_by(MISSION, SETNO, SPEC) %>%
     summarise(TOTNO = sum(TOTNO),
-              TOTWGT = sum(TOTWGT),
-              SAMPWGT = sum(SAMPWGT), .groups = "keep") %>%
+              TOTWGT = sum(TOTWGT), .groups = "keep") %>%
     as.data.frame()
   
   #GSSPECIES_20220624: remove temp, internal field and poorly used ENTR field
   res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
   res$GSSPECIES_20220624$ENTR <- NULL
-
+  
+  #rename the new species table to GSSPECIES
+  names(res)[names(res) == "GSSPECIES_20220624"] <- "GSSPECIES"
+  
+  
   # add all of the list objects to the package
   purrr::walk2(res, names(res), function(obj, name) {
     assign(name, obj)

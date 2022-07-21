@@ -1,9 +1,9 @@
 Package: RVSurveyData
-Title: A package facilitating sharing of the DFO Maritimes Groundfish Survey Data with external partners
-Version: 2022.07.18
+Title: A package for sharing of the DFO Maritimes Groundfish Survey Data externally
+Version: 2022.07.21
 Authors@R: c( person("Mike", "McMahon", email="Mike.McMahon@dfo-mpo.gc.ca", role=c("aut", "cre")) )
 Maintainer: Mike McMahon <Mike.McMahon@dfo-mpo.gc.ca>
-Description: This package contains selected tables from the Maritimes Groundfish Survey Database and several association spatial objects.
+Description: This package contains selected tables and derived objects from the Maritimes Groundfish Survey Database and several associated spatial objects.
 Depends:
     R (>= 2.10)
 Suggests: 

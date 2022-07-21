@@ -3,24 +3,28 @@
 \docType{data}
 \name{GSSPECIES}
 \alias{GSSPECIES}
-\title{GSSPECIES Metadata}
+\title{GSSPECIES}
 \format{
 data.frame
 \describe{
+\item{CODE}{The numeric code used to identify the species.}
 \item{SPEC}{The scientific name of the species.}
 \item{COMM}{The common name of the species.}
-\item{CODE}{The numeric code used to identify the species.}
-\item{NMFS}{The numeric code used by NMFS to identify the species.}
-\item{ENTR}{The date the code was added.}
-\item{AUTHORITY}{xxx}
-\item{TSN}{The ITIS Taxonomic Serial Number.}
-\item{COMMENTS}{xxx}
+\item{COMMENTS}{Most frequently used record previously used scientific name}
+\item{VALID_SPP}{Boolean field indicating if this is a valid, biological species or something else (e.g. life stage, etc)}
+\item{TSN}{ITIS Taxonomic Serial Number}
+\item{APHIAID}{WoRMS Aphia ID code}
+\item{TAXON_STATUS}{An assessment of the validity of "SPEC" from WoRMS (NULLS are "accepted")}
+\item{APHIAID_SUGG}{A suggested, more valid APHIAID from WoRMS}
+\item{SPEC_SUGG}{The suggested, more valid scientific name, according to WoRMS}
+\item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey}
+\item{PREV_IDD_APHIAID}{If this species may have been grouped with one or more other species prior to IDD_CONFID_SINCE, this is the aphiaid that would have been used previously}
 }
 }
 \usage{
 GSSPECIES
 }
 \description{
-This is the Maritimes Species Code table.
+This is an updated version of the Maritimes Species Code table.
 }
 \keyword{datasets}

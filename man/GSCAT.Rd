@@ -10,15 +10,8 @@ data.frame
 \item{MISSION}{A 10 character field to identify the survey.  The first 3 character identifies the vessel (eg. NED), the next 4 characters identifies the year (eg. 2000) and the last 3 characters identifies the survey number within the year. (eg. 001). Example NED2000001.}
 \item{SETNO}{Each tow is assigned a numeric set identifier starting with 1 for the first tow and then assigned consecutively.}
 \item{SPEC}{Maritimes species code.}
-\item{SAMPWGT}{Weight Sampled (Kgs). The SAMPWGT in GSCAT is the combined weight of the individuals that were looked at individually, and should be close to the sum of the individual values of FWT in GSDET.}
 \item{TOTWGT}{Total Weight (Kg). When a trawl is hauled, all of the individuals for a given species are weighed and counted.  These values become  TOTWGT and TOTNO in GSCAT.  For huge catches, the TOTNO is sometimes calculated from the weight.}
 \item{TOTNO}{Total Number. When a trawl is hauled, all of the individuals for a given species are weighed and counted.  These values become  TOTWGT and TOTNO in GSCAT.  For huge catches, the TOTNO is sometimes calculated from the weight.}
-\item{CALWT}{Not Measured indicator.}
-\item{SIZE_CLASS}{Size Class.}
-\item{LENGTH_TYPE}{Description of how the species is measured (Total Length, Fork Length, Pre-anal Fin Length, Carapace Width, Carapace Length, Mantle Length)}
-\item{LENGTH_UNITS}{Gives the units of measure used for the length of the species (Centimeters, Millimeters)}
-\item{WEIGHT_TYPE}{Description of how the species is weighed (Total Weight, Gutted Weight)}
-\item{WEIGHT_UNITS}{Gives the units of weight used for a species (grams, kilograms)}
 }
 }
 \usage{

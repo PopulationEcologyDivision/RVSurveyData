@@ -18,15 +18,8 @@
 #' \item{MISSION}{A 10 character field to identify the survey.  The first 3 character identifies the vessel (eg. NED), the next 4 characters identifies the year (eg. 2000) and the last 3 characters identifies the survey number within the year. (eg. 001). Example NED2000001.}
 #' \item{SETNO}{Each tow is assigned a numeric set identifier starting with 1 for the first tow and then assigned consecutively.}
 #' \item{SPEC}{Maritimes species code.}
-#' \item{SAMPWGT}{Weight Sampled (Kgs). The SAMPWGT in GSCAT is the combined weight of the individuals that were looked at individually, and should be close to the sum of the individual values of FWT in GSDET.}
 #' \item{TOTWGT}{Total Weight (Kg). When a trawl is hauled, all of the individuals for a given species are weighed and counted.  These values become  TOTWGT and TOTNO in GSCAT.  For huge catches, the TOTNO is sometimes calculated from the weight.}
 #' \item{TOTNO}{Total Number. When a trawl is hauled, all of the individuals for a given species are weighed and counted.  These values become  TOTWGT and TOTNO in GSCAT.  For huge catches, the TOTNO is sometimes calculated from the weight.}
-#' \item{CALWT}{Not Measured indicator.}
-#' \item{SIZE_CLASS}{Size Class.}
-#' \item{LENGTH_TYPE}{Description of how the species is measured (Total Length, Fork Length, Pre-anal Fin Length, Carapace Width, Carapace Length, Mantle Length)}
-#' \item{LENGTH_UNITS}{Gives the units of measure used for the length of the species (Centimeters, Millimeters)}
-#' \item{WEIGHT_TYPE}{Description of how the species is weighed (Total Weight, Gutted Weight)}
-#' \item{WEIGHT_UNITS}{Gives the units of weight used for a species (grams, kilograms)}
 #' }
 "GSCAT"
 
@@ -63,8 +56,8 @@
 #' }
 "GSCURNT"
 
-#' @title GSDET Metadata
-#' @name GSDET
+#' @title dataDETS Metadata
+#' @name dataDETS
 #' @description This table describes the various measurements take for individual specimens (e.g. length, weight, etc). 
 #' @docType data
 #' @format data.frame
@@ -73,22 +66,30 @@
 #' \item{SETNO}{Each tow is assigned a numeric set identifier starting with 1 for the first tow and then assigned consecutively.}
 #' \item{SPEC}{Maritimes species code.}
 #' \item{FSHNO}{Unique number assigned within species and mission.}
+#' \item{SPECIMEN_ID}{Specimen Identifier}
 #' \item{FLEN}{"Fish Length" - typically cm}
 #' \item{FSEX}{Sex of the specimen.}
 #' \item{FMAT}{Code for the observed maturity stage.}
 #' \item{FWT}{The round weight in grams of the specimen.}
 #' \item{AGMAT}{Code for the age material collected.}
-#' \item{NANN}{Number of Annuli.}
-#' \item{EDGE}{Edge Type}
-#' \item{CHKMRK}{Check Mark is made up of 3 single character fields.}
 #' \item{AGE}{Age of specimen.}
-#' \item{AGER}{Ager code}
-#' \item{CLEN}{Count at Length.}
-#' \item{REMARKS}{Any comments pertaining to the specimen.}
-#' \item{SIZE_CLASS}{Size Class.}
-#' \item{SPECIMEN_ID}{Specimen Identifier}
 #' }
-"GSDET"
+"dataDETS"
+
+#' @title dataLF Metadata
+#' @name dataLF
+#' @description This table describes the various measurements take for individual specimens (e.g. length, weight, etc). 
+#' @docType data
+#' @format data.frame
+#' \describe{
+#' \item{MISSION}{A 10 character field to identify the survey.  The first 3 character identifies the vessel (eg. NED), the next 4 characters identifies the year (eg. 2000) and the last 3 characters identifies the survey number within the year. (eg. 001). Example NED2000001.}
+#' \item{SETNO}{Each tow is assigned a numeric set identifier starting with 1 for the first tow and then assigned consecutively.}
+#' \item{SPEC}{Maritimes species code.}
+#' \item{FSEX}{Sex of the specimen.}
+#' \item{FLEN}{"Fish Length" - typically cm}
+#' \item{CLEN}{Count at Length.}
+#' }
+"dataLF"
 
 #' @title GSFORCE Metadata
 #' @name GSFORCE
@@ -134,28 +135,19 @@
 #' \item{SDATE}{The date at the beginning of the tow.}
 #' \item{TIME}{The local time at the beginning of the tow.}
 #' \item{STRAT}{A numeric code to identify stratum.}
-#' \item{SLAT}{The latitude at the start of a tow}
-#' \item{SLONG}{The longitude at the start of a tow}
-#' \item{ELAT}{The latitude at the end of a tow}
-#' \item{ELONG}{The longitude at the end of a tow}
 #' \item{AREA}{A numeric code to identify the NAFO area.}
 #' \item{DUR}{Duration.}
 #' \item{DIST}{The actual tow distance in nautical miles.}
 #' \item{SPEED}{The average speed of the vessel over bottom, based on GPS, to the nearest tenth of a nautical mile.}
 #' \item{HOWD}{A single digit code to identify the source of information for the distance.}
 #' \item{HOWS}{A single digit code to identify the source of information for the speed.}
-#' \item{DMIN}{The minimum(shallowest) bottom depth, in fathoms observed during a tow.}
-#' \item{DMAX}{The maximum(deepest) bottom depth, in fathoms observed during a tow.}
 #' \item{WIND}{Wind Direction. In true degrees, between 0 and 360.}
 #' \item{FORCE}{A single digit code to identify wind force on the Beaufort scale}
 #' \item{CURNT}{A single digit code to identify the direction of the tide in relation to the vessel}
 #' \item{TYPE}{A numeric code to identify the experiment type.}
 #' \item{GEAR}{A single digit numeric code to identify the gear being used.}
 #' \item{AUX}{A single digit numeric code to identify any auxiliary gear being used.}
-#' \item{DEPTH}{The average of start and end depth}
 #' \item{REMARKS}{Any comments pertaining to set.}
-#' \item{START_DEPTH}{The bottom depth at start of a set, in fathoms.}
-#' \item{END_DEPTH}{The bottom depth at end of a set, in fathoms.}
 #' \item{SURFACE_TEMPERATURE}{Surface Temperature in celsius}
 #' \item{BOTTOM_TEMPERATURE}{Bottom temperature in celsius }
 #' \item{BOTTOM_SALINITY}{Bottom salinity measured in pounds per square unit. }
@@ -212,26 +204,9 @@
 #' }
 "GSSPEC"
 
-#' @title GSSPECIES Metadata
+#' @title GSSPECIES
 #' @name GSSPECIES
-#' @description This is the Maritimes Species Code table.
-#' @docType data
-#' @format data.frame
-#' \describe{
-#' \item{SPEC}{The scientific name of the species.}
-#' \item{COMM}{The common name of the species.}
-#' \item{CODE}{The numeric code used to identify the species.}
-#' \item{NMFS}{The numeric code used by NMFS to identify the species.}
-#' \item{ENTR}{The date the code was added.}
-#' \item{AUTHORITY}{xxx}
-#' \item{TSN}{The ITIS Taxonomic Serial Number.}
-#' \item{COMMENTS}{xxx}
-#' }
-"GSSPECIES"
-
-#' @title GSSPECIES_20220624
-#' @name GSSPECIES_20220624
-#' @description This is a new, improved Maritimes Species Code table.
+#' @description This is an updated version of the Maritimes Species Code table.
 #' @docType data
 #' @format data.frame
 #' \describe{
@@ -248,7 +223,7 @@
 #' \item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey}
 #' \item{PREV_IDD_APHIAID}{If this species may have been grouped with one or more other species prior to IDD_CONFID_SINCE, this is the aphiaid that would have been used previously}
 #' }
-"GSSPECIES_20220624"
+"GSSPECIES"
 
 #' @title GSSPECIES_TAX
 #' @name GSSPECIES_TAX
