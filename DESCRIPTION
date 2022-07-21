@@ -7,8 +7,12 @@ Description: This package contains selected tables and derived objects from the 
 Depends:
     R (>= 2.10)
 Suggests: 
+          dplyr,
           knitr, 
+          ggplot2,
+          mapdata,
           rmarkdown,
+          sf
 VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
