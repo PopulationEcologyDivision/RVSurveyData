@@ -340,7 +340,12 @@
 #' @docType data
 #' @format an sf object with a CRS of 4326 (i.e. WGS84)
 #' \describe{
-#' \item{NAFO}{This is the identifier for each NAFO subunit}
+#' \item{NAFO_1}{This is the NAFO unit identifier for the largest units (i.e. 2 characters (e.g. "4V", "3P", etc))}
+#' \item{NAFO_2}{This is a finer resolution identifier for selected NAFO units (i.e. 3 characters (e.g. "4VS", "3PS", etc))}
+#' \item{NAFO_3}{This is the finest possible identifier for selected NAFO units (i.e. 4 characters (e.g. "4VSE", "3PSG", etc))}
+#' \item{NAFO_BEST}{This is the finest possible resolution identifier for any area}
+#' \item{COD}{Some groups break the NAFO Subunits up a little differently (i.e. 4VsW, 4X_SS amd 4XBoF), and this field facilitates working with those divisions.}
+#' \item{COD_BEST}{This is the finest possible resolution identifier for any area (using the COD areas)}
 #' }
 "nafo_sf"
 
