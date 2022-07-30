@@ -101,7 +101,13 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   dataLF$CLEN_corr <- dataLF$CLEN
   #if non-na values exist for totwgt and sampwgt (and are >0), use them to bump up CLEN
   dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_corr"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN"],3)
-  dataLF$CLEN <- NULL
+  
+  #need to bump up CLEN by TOW dist!
+  dataLF <- merge(dataLF, GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
+  #force NA dists to 1.75
+  dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
+  dataLF$CLEN_corr <- round(dataLF$CLEN_corr *(1.75/dataLF$DIST),6)
+  dataLF$CLEN <- dataLF$DIST <- NULL
   colnames(dataLF)[colnames(dataLF)=="CLEN_corr"] <- "CLEN"
   dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN")]
   
