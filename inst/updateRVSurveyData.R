@@ -47,7 +47,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                   ROracle::dbGetQuery(con, sqlStatement)
                 })
   names(res)<- allTbls
-  
+  saveRDS(res, "C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20220811.rds")
   ## Various source tables need some tweaking to improve usability
   #GSINF: add decimal degrees version of coords
   res$GSINF$SLAT_DD  <- DDMM_to_DDDD(res$GSINF$SLAT)
@@ -81,11 +81,13 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   
   #GSDET 
   #NED 2016016 - first instance of measuring herring in mm - convert all prior data from cm to mm
-  res$GSDET[substr(res$GSDET$MISSION,4,7) <= 2016 & 
-              !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
-              !is.na(res$GSDET$FLEN),"FLEN"] <- res$GSDET[substr(res$GSDET$MISSION,4,7) <= 2016 & 
-                                                            !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
-                                                            !is.na(res$GSDET$FLEN),"FLEN"]*10
+  res$GSDET[res$GSDET$SPEC == 60 &
+            substr(res$GSDET$MISSION,4,7) <= 2016 & 
+            !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
+            !is.na(res$GSDET$FLEN),"FLEN"] <- res$GSDET[res$GSDET$SPEC == 60 &
+                                                        substr(res$GSDET$MISSION,4,7) <= 2016 & 
+                                                        !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
+                                                        !is.na(res$GSDET$FLEN),"FLEN"]*10
   
   
   # 1 create table from GSDET with CLEN for each MISSION SETNO SPEC FLEN FSEX.
@@ -103,7 +105,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_corr"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN"],3)
   
   #need to bump up CLEN by TOW dist!
-  dataLF <- merge(dataLF, GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
+  dataLF <- merge(dataLF, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
   dataLF$CLEN_corr <- round(dataLF$CLEN_corr *(1.75/dataLF$DIST),6)
@@ -150,8 +152,10 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   
   #rename the new species table to GSSPECIES
   names(res)[names(res) == "GSSPECIES_20220624"] <- "GSSPECIES"
+  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], all.x=T)
+  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_TAX, all.x=T)
   
-  
+  res$GSSPEC <- res$GSSPECIES_TAX <- NULL
   # add all of the list objects to the package
   purrr::walk2(res, names(res), function(obj, name) {
     assign(name, obj)

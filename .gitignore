@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 inst/rawSpatial/
+inst/*.rds
 inst/draft/
 vignettes/

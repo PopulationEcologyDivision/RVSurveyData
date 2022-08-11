@@ -178,31 +178,31 @@
 #' }
 "GSMISSIONS"
 
-#' @title GSSPEC Metadata
-#' @name GSSPEC
-#' @description This table appears to describe quality control and data processing parameters by species
-#' @docType data
-#' @format data.frame
-#' \describe{
-#' \item{SPEC}{Maritimes species code.}
-#' \item{CNAME}{The common name of the species.}
-#' \item{DMIN}{Minimum depth for this species}
-#' \item{DMAX}{Maximum depth for this species}
-#' \item{VSEX1}{xxx}
-#' \item{VSEX2}{xxx}
-#' \item{VSEX3}{xxx}
-#' \item{LGRP}{length grouping}
-#' \item{LMIN}{Minimum length}
-#' \item{LMAX}{Maximum length}
-#' \item{MATREQ}{Aging materials required}
-#' \item{SAMPREQ}{Samples required}
-#' \item{MLEN}{xxx}
-#' \item{LENWGTA}{Length weight regression coefficient a}
-#' \item{LENWGTB}{Length weight regression coefficient b}
-#' \item{LFSEXED}{Length frequency counts by sex (Y/N)}
-#' \item{MAXWGT}{Maximum weight for species}
-#' }
-"GSSPEC"
+# @title GSSPEC Metadata
+# @name GSSPEC
+# @description This table appears to describe quality control and data processing parameters by species
+# @docType data
+# @format data.frame
+# \describe{
+# \item{SPEC}{Maritimes species code.}
+# \item{CNAME}{The common name of the species.}
+# \item{DMIN}{Minimum depth for this species}
+# \item{DMAX}{Maximum depth for this species}
+# \item{VSEX1}{xxx}
+# \item{VSEX2}{xxx}
+# \item{VSEX3}{xxx}
+# \item{LGRP}{length grouping}
+# \item{LMIN}{Minimum length}
+# \item{LMAX}{Maximum length}
+# \item{MATREQ}{Aging materials required}
+# \item{SAMPREQ}{Samples required}
+# \item{MLEN}{xxx}
+# \item{LENWGTA}{Length weight regression coefficient a}
+# \item{LENWGTB}{Length weight regression coefficient b}
+# \item{LFSEXED}{Length frequency counts by sex (Y/N)}
+# \item{MAXWGT}{Maximum weight for species}
+# }
+# "GSSPEC"
 
 #' @title GSSPECIES
 #' @name GSSPECIES
@@ -222,25 +222,34 @@
 #' \item{SPEC_SUGG}{The suggested, more valid scientific name, according to WoRMS}
 #' \item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey}
 #' \item{PREV_IDD_APHIAID}{If this species may have been grouped with one or more other species prior to IDD_CONFID_SINCE, this is the aphiaid that would have been used previously}
+#' \item{LGRP}{length grouping}
+#' \item{LFSEXED}{Length frequency counts by sex (Y/N)}
+#' \item{KINGDOM}{KINGDOM (for APHIAID from WoRMS)}
+#' \item{PHYLUM}{PHYLUM (for APHIAID from WoRMS)}
+#' \item{CLASS}{CLASS (for APHIAID from WoRMS)}
+#' \item{ORDER}{ORDER (for APHIAID from WoRMS)}
+#' \item{FAMILY}{FAMILY (for APHIAID from WoRMS)}
+#' \item{GENUS}{GENUS (for APHIAID from WoRMS)}
+#' \item{SPECIES}{SPECIES (for APHIAID from WoRMS)}
 #' }
 "GSSPECIES"
 
-#' @title GSSPECIES_TAX
-#' @name GSSPECIES_TAX
-#' @description This is a table of the taxonomic hierarchies associated with the APHIAIDs found in GSSPECIES_20220624 (from WoRMS)
-#' @docType data
-#' @format data.frame
-#' \describe{
-#' \item{APHIAID}{WoRMS Aphia ID code}
-#' \item{KINGDOM}{KINGDOM}
-#' \item{PHYLUM}{PHYLUM}
-#' \item{CLASS}{CLASS}
-#' \item{ORDER}{ORDER}
-#' \item{FAMILY}{FAMILY}
-#' \item{GENUS}{GENUS}
-#' \item{SPECIES}{SPECIES}
-#' }
-"GSSPECIES_TAX"
+# @title GSSPECIES_TAX
+# @name GSSPECIES_TAX
+# @description This is a table of the taxonomic hierarchies associated with the APHIAIDs found in GSSPECIES_20220624 (from WoRMS)
+# @docType data
+# @format data.frame
+# \describe{
+# \item{APHIAID}{WoRMS Aphia ID code}
+# \item{KINGDOM}{KINGDOM}
+# \item{PHYLUM}{PHYLUM}
+# \item{CLASS}{CLASS}
+# \item{ORDER}{ORDER}
+# \item{FAMILY}{FAMILY}
+# \item{GENUS}{GENUS}
+# \item{SPECIES}{SPECIES}
+# }
+#"GSSPECIES_TAX"
 
 # @title GSSTRATA Metadata
 # @name GSSTRATA

@@ -19,6 +19,15 @@ data.frame
 \item{SPEC_SUGG}{The suggested, more valid scientific name, according to WoRMS}
 \item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey}
 \item{PREV_IDD_APHIAID}{If this species may have been grouped with one or more other species prior to IDD_CONFID_SINCE, this is the aphiaid that would have been used previously}
+\item{LGRP}{length grouping}
+\item{LFSEXED}{Length frequency counts by sex (Y/N)}
+\item{KINGDOM}{KINGDOM (for APHIAID from WoRMS)}
+\item{PHYLUM}{PHYLUM (for APHIAID from WoRMS)}
+\item{CLASS}{CLASS (for APHIAID from WoRMS)}
+\item{ORDER}{ORDER (for APHIAID from WoRMS)}
+\item{FAMILY}{FAMILY (for APHIAID from WoRMS)}
+\item{GENUS}{GENUS (for APHIAID from WoRMS)}
+\item{SPECIES}{SPECIES (for APHIAID from WoRMS)}
 }
 }
 \usage{
