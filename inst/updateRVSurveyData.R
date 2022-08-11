@@ -147,12 +147,17 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
     as.data.frame()
   
   #GSSPECIES_20220624: remove temp, internal field and poorly used ENTR field
+  # res<-list()
+  # res$GSSPECIES_20220624<-GSExtract20220811$GSSPECIES_20220624
+  # res$GSSPEC <- GSExtract20220811$GSSPEC
+  # res$GSSPECIES_TAX <- GSExtract20220811$GSSPECIES_TAX
+  
   res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
   res$GSSPECIES_20220624$ENTR <- NULL
   
   #rename the new species table to GSSPECIES
   names(res)[names(res) == "GSSPECIES_20220624"] <- "GSSPECIES"
-  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], all.x=T)
+  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE", by.y = "SPEC", all.x=T)
   res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_TAX, all.x=T)
   
   res$GSSPEC <- res$GSSPECIES_TAX <- NULL
