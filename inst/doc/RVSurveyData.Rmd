@@ -75,15 +75,15 @@ head(GSCAT)
 Documentation for each object is accessible via commands like `?GSCAT`. 
 
 ## Table-Specific Notes
-### `dataDETS` & `dataLF`^[Derived from `GSDET`, which is not included in this package]
-Together, `dataLF` and `dataDETS` replace `GSDET`.
+### dataDETS & dataLF^[Derived from `GSDET`, which is not included in this package]
+Together, `dataLF` and `dataDETS` replace `GSDET`.  `GSDET` included the data from both of these objects, and by separating the length frequency data from the individual observations, it is hoped that the data will be more intuitive, and less prone to mishandling. One notable simplification is that size classes have been handled, so the `SIZE_CLASS` field is no longer necessary.  Please see the GSCAT section for more details.  
 
-#### `dataDETS`
-* `dataDETS` contains detailed information specific to individual animals for any specimens that had one or more of length, weight, age, sex and/or maturity measured.
+#### dataDETS
+`dataDETS` contains detailed information specific to individual animals for any specimens that had one or more of length, weight, age, sex and/or maturity measured.
 
 *When joining `dataDETS` to `GSCAT` or `dataLF`, they must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".`*
 
-#### `dataLF`
+#### dataLF
 `dataLF` contains the length-frequency data for each set (by sex), and where necessary, has had the values of `CLEN` (count at length) corrected for the effects of subsampling.
 
 *When joining `dataLF` to `GSCAT` or `dataDETS`, they must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".`*
@@ -97,27 +97,22 @@ Together, `dataLF` and `dataDETS` replace `GSDET`.
 *When joining GSINF to GSCAT, it must be joined using __both__ "MISSION" __and__ "SETNO".*
 
 ### GSCAT
-* `SAMPWGT` -  Within the source database, this table includes a field called `SAMPWGT` which is not included here.  `SAMPWGT` is the weight of the individual sample retained for length frequency measurements and other biological detail sampling. For this dataset, the length frequency information and values of `TOTNO` (i.e. `dataLF`) have already been corrected for the effects of such "subsampling". 
+While they still exist in the internal database, `SIZE_CLASS` and `SAMPWGT` are not included in this dataset.  All observations of a single species within a single set have had the weights and numbers of all size classes summed together, removing the need for `SIZE_CLASS`.  Similarly, the length frequency information and values of `TOTNO` have already been corrected for the effects of such "subsampling", thus removing the need to include `SAMPWGT`.  The code used to do these corrections can be found in in [`updateRVSurveyData.R`](https://github.com/PopulationEcologyDivision/RVSurveyData/blob/main/inst/updateRVSurveyData.R)
+
 * `TOTWGT` & `TOTNO` - When a trawl is hauled, all of the individuals for a given species are weighed and counted. These values become `TOTWGT` and `TOTNO`. `TOTWGT` is always measured, but during subsampling events, not all individuals of a species are counted.  In these cases, `TOTNO` is calculated (i.e. `TOTWGT`/`SAMPWGT` * (sum of `CLEN`)).
 * `TOTWGT` is measured in kgs.
 * Up to and including Spring 1995, spring balances with a precision of 1kg were used during the survey. Because set weights were reported to the nearest kg, cases exist where the `GSCAT$TOTWGT` is reported a "0" despite the `GSCAT$TOTNUM` indicating that at least one individual was caught.  This is due to the measured weight not registering on the old spring balances (which had a precision of 1kg).  
-* `SIZE_CLASS` -  Within the source database, this table includes a field called `SIZE_CLASS` which is not included here.  `SIZE_CLASS` is used to facilitate at-sea sampling by breaking a catch of a particular species into manageable chunks based on different observed sizes of animals within a set.  For this table, all observations of a single species within a single set have had the weights and numbers of all size classes summed together.
-
 *When joining to `GSCAT` to `dataDETS` or `dataLF`, it must be joined using __all three__ of the fields "MISSION", "SETNO" __and__ "SPEC".*
 
 ### GSSPECIES
-`GSSPECIES` now includes [WoRMs AphiaIDs](https://www.marinespecies.org/about.php) and some additional information for each species.  
-
-`GSSPECIES_TAX` is new, and consists of the full taxonomic hierarchy associated with each aphiaid (i.e. Kingdom, Phylum, Class, etc).  This facilitates working with the data at taxonomic levels other than species. 
+`GSSPECIES` now includes [WoRMs AphiaIDs](https://www.marinespecies.org/about.php) and some additional information for each species.  New information includes the full taxonomic hierarchy associated with each aphiaid (i.e. Kingdom, Phylum, Class, etc), as well as the LGRP and LFSEXED, which correspond with the cm groups used to bin lengths, and whether or not detailed sampling is done by sex.
 
 #### Species-Specific Information
 ##### Identification
 
 Not all species have always been carefully enumerated during the survey.  The standard ID guide used is [Scott and Scott, Atlantic fishes of Canada](https://www.biblio.com/book/atlantic-fishes-canada-scott-w-b/d/570660430?aid=frg&gclid=CjwKCAjw_b6WBhAQEiwAp4HyIKxmnSMPiEyJYFjmRXuPpNI5RFBAMJBjxQBI107eFItGDaXb9NmFNhoCDfQQAvD_BwE), which was published in 1988.  The guide available prior to that was less detailed, and had a number of issues, such as it did not distinguish between Red Hake and White Hake.  
 
-The vessel in use prior to 1982 was the AT Cameron, a side trawler.  The catch was dumped from the net onto the deck, then sorted into wicker baskets and carried to the lab.  Many small specimens were missed or washed away.  As such, the number of species recorded did not always reflect the true diversity caught and the total numbers for some species will have underrepresented the actual catch. As  a result, only ~65 species have been provisionally identified as having reliable TOTNO and TOTWGT records since the start of the survey (i.e. 1970). These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`. 
-
-Only ~65 species have been reliably identified since the start of the survey (i.e. 1970).  These are identifiable as those species with values of "1970-01-01" in `GSSPECIES_20220624$IDD_CONFID_SINCE`.  
+The vessel in use prior to 1982 was the AT Cameron, a side trawler.  The catch was dumped from the net onto the deck, then sorted into wicker baskets and carried to the lab.  Many small specimens were missed or washed away.  As such, the number of species recorded did not always reflect the true diversity caught and the total numbers for some species will have underrepresented the actual catch. As  a result, only ~65 species have been provisionally identified as having reliable TOTNO and TOTWGT records since the start of the survey (i.e. 1970). These are identifiable as those species with values of "1970-01-01" in `GSSPECIES$IDD_CONFID_SINCE`. 
 
 The number of species recorded increases after 1982, when the primary vessel changed to the Alfred Needler.  Catch on the Needler is dumped from the trawl into a hopper which discharges into the fishlab, so no specimens are lost prior to reaching the lab.  In the mid-90's, an effort began to better differentiate small sculpins and pouts more carefully, and as a result, the number of identified species increased.
 
@@ -125,7 +120,7 @@ In 1998, records of many invertebrate groups began.  Many of these records were 
 
 Below ~40cm, differentiation between Winter and Little skates is questionable and since the spring of 2014 most small specimens are recorded as Spec =1191.
 
-We are currently working to determine the dates at which other species began to be confidently identified and will continue to populate `GSSPECIES_20220624$IDD_CONFID_SINCE` as we are able.
+We are currently working to determine the dates at which other species began to be confidently identified and will continue to populate `GSSPECIES$IDD_CONFID_SINCE` as we are able.
 
 ##### Measurements
 
