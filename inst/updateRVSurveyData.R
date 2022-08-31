@@ -36,8 +36,8 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   allTbls = c("GSAUX", "GSCAT", "GSCURNT", "GSDET", 
               "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
               "GSMISSIONS", "GSSEX","GSSPEC", 
-              "GSSTRATUM", "GSWARPOUT", "GSXTYPE",
-              "GSSPECIES_20220624", "GSSPECIES_TAX")
+              "GSSTRATUM", "GSWARPOUT", "GSXTYPE","GSSPECIES_APHIAS")
+#              "GSSPECIES_20220624", "GSSPECIES_TAX")
   
   # make connection and extract all data to a list
   con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), fn.oracle.username, fn.oracle.password, fn.oracle.dsn)
@@ -152,15 +152,15 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   # res$GSSPEC <- GSExtract20220811$GSSPEC
   # res$GSSPECIES_TAX <- GSExtract20220811$GSSPECIES_TAX
   
-  res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
-  res$GSSPECIES_20220624$ENTR <- NULL
+  # res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
+  res$GSSPECIES_APHIAS$ENTR <- NULL
   
   #rename the new species table to GSSPECIES
-  names(res)[names(res) == "GSSPECIES_20220624"] <- "GSSPECIES"
+  names(res)[names(res) == "GSSPECIES_APHIAS"] <- "GSSPECIES"
   res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE", by.y = "SPEC", all.x=T)
-  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_TAX, all.x=T)
+  # res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_TAX, all.x=T)
   
-  res$GSSPEC <- res$GSSPECIES_TAX <- NULL
+  res$GSSPEC <- NULL
   # add all of the list objects to the package
   purrr::walk2(res, names(res), function(obj, name) {
     assign(name, obj)

@@ -215,8 +215,8 @@
 #' \item{COMM}{The common name of the species.}
 #' \item{COMMENTS}{Most frequently used record previously used scientific name}
 #' \item{VALID_SPP}{Boolean field indicating if this is a valid, biological species or something else (e.g. life stage, etc)}
-#' \item{TSN}{ITIS Taxonomic Serial Number}
 #' \item{APHIAID}{WoRMS Aphia ID code}
+#' \item{TSN}{ITIS Taxonomic Serial Number}
 #' \item{TAXON_STATUS}{An assessment of the validity of "SPEC" from WoRMS (NULLS are "accepted")}
 #' \item{APHIAID_SUGG}{A suggested, more valid APHIAID from WoRMS}
 #' \item{SPEC_SUGG}{The suggested, more valid scientific name, according to WoRMS}
