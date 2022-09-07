@@ -9,6 +9,7 @@ updateRVSurveySpatialData <- function(){
   #stuff below is for Kasia's new improved layer.
   # the layer read in below already has the US areas, and new fields.
   nafo_sf <- sf::st_read("c:/git/Maritimes/Mar.data/data-raw/NAFO/NAFO_BEST_KasiaUS2022.shp")
+  nafo_sf$OBJECTID_1 <- nafo_sf$ORIG_FID <- nafo_sf$OBJECTID <- nafo_sf$Shape_Leng <- nafo_sf$Shape_Le_1 <- nafo_sf$Shape_Area <- NULL
   usethis::use_data(nafo_sf, overwrite = TRUE)
   
   strataMar_sf <- sf::st_read("inst/rawSpatial/MaritimesRegionEcosystemAssessmentStrata(2014-).shp")
