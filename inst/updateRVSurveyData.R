@@ -32,6 +32,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   library(dplyr)
   library(devtools)
   
+  allTbls <- c("GSSPECIES_APHIAS","GSSPEC")
   
   allTbls = c("GSAUX", "GSCAT", "GSCURNT", "GSDET", 
               "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
