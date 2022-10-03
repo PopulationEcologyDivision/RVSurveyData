@@ -41,14 +41,14 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
 #              "GSSPECIES_20220624", "GSSPECIES_TAX")
   
   # make connection and extract all data to a list
-  con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), fn.oracle.username, fn.oracle.password, fn.oracle.dsn)
+  con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), groundfish.username, groundfish.password, oracle.dsn)
   res <- lapply(allTbls,
                 function(myTable){
                   sqlStatement <- paste0("select * from GROUNDFISH.",myTable)
                   ROracle::dbGetQuery(con, sqlStatement)
                 })
   names(res)<- allTbls
-  saveRDS(res, "C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20220811.rds")
+  saveRDS(res, "C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
   ## Various source tables need some tweaking to improve usability
   #GSINF: add decimal degrees version of coords
   res$GSINF$SLAT_DD  <- DDMM_to_DDDD(res$GSINF$SLAT)
@@ -158,7 +158,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   
   #rename the new species table to GSSPECIES
   names(res)[names(res) == "GSSPECIES_APHIAS"] <- "GSSPECIES"
-  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE", by.y = "SPEC", all.x=T)
+  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE_MAR", by.y = "SPEC", all.x=T)
   # res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_TAX, all.x=T)
   
   res$GSSPEC <- NULL
