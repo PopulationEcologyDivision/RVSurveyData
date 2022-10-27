@@ -32,13 +32,13 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   library(dplyr)
   library(devtools)
   
-  allTbls <- c("GSSPECIES_APHIAS","GSSPEC")
+  # allTbls <- c("GSSPECIES_NEW","GSSPEC","GSSPECIES_APHIAS")
   
   allTbls = c("GSAUX", "GSCAT", "GSCURNT", "GSDET", 
               "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
               "GSMISSIONS", "GSSEX","GSSPEC", 
-              "GSSTRATUM", "GSWARPOUT", "GSXTYPE","GSSPECIES_APHIAS")
-#              "GSSPECIES_20220624", "GSSPECIES_TAX")
+              "GSSTRATUM", "GSWARPOUT", "GSXTYPE",
+             "GSSPECIES_NEW","GSSPECIES_APHIAS","GSSPEC")
   
   # make connection and extract all data to a list
   con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), groundfish.username, groundfish.password, oracle.dsn)
@@ -154,14 +154,26 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   # res$GSSPECIES_TAX <- GSExtract20220811$GSSPECIES_TAX
   
   # res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
-  res$GSSPECIES_APHIAS$ENTR <- NULL
+  res$GSSPECIES_NEW$ENTR <- NULL
   
   #rename the new species table to GSSPECIES
-  names(res)[names(res) == "GSSPECIES_APHIAS"] <- "GSSPECIES"
-  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE_MAR", by.y = "SPEC", all.x=T)
-  # res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_TAX, all.x=T)
+  names(res)[names(res) == "GSSPECIES_NEW"] <- "GSSPECIES"
   
-  res$GSSPEC <- NULL
+  # colnames(res$GSSPECIES)[colnames(res$GSSPECIES)=="CODE_MAR"] <- "CODE"
+  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE", by.y = "SPEC", all.x=T)
+  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_APHIAS[,!names(res$GSSPECIES_APHIAS)%in% c("SCIENTIFICNAME","RANK")], by = "APHIAID", all.x=T)
+  
+  #add GSCAT COUNT?
+  if (F){
+    library(RVSurveyData)
+    sppCounter_CAT <- aggregate(
+      x = list(N_OCCURENCES_GSCAT = GSCAT$SPEC),
+      by = list(CODE = GSCAT$SPEC),
+      length
+    )
+    res$GSSPECIES <- merge(res$GSSPECIES, sppCounter_CAT, all.x=T)
+  }
+  res$GSSPEC <- res$GSSPECIES_APHIAS <- NULL
   # add all of the list objects to the package
   purrr::walk2(res, names(res), function(obj, name) {
     assign(name, obj)
