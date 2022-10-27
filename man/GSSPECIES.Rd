@@ -7,27 +7,25 @@
 \format{
 data.frame
 \describe{
-\item{CODE}{The numeric code used to identify the species/group.}
-\item{SPEC}{The scientific name of the species/group.}
-\item{COMM}{The common name of the species.}
-\item{COMMENTS}{Additional information.}
-\item{VALID_SPP}{Field indicating if this is a biological group worthy of an aphiaid (i.e. 0= obsolete, 1 = valid, 2 =invalid).}
 \item{APHIAID}{WoRMS Aphia ID code.}
-\item{TSN}{ITIS Taxonomic Serial Number.}
-\item{TAXON_STATUS}{An assessment of the validity of "SPEC" from WoRMS (NULLS are "accepted").}
-\item{APHIAID_SUGG}{A suggested, more valid APHIAID from WoRMS.}
-\item{SPEC_SUGG}{The suggested, more valid scientific name, according to WoRMS.}
+\item{CODE}{The numeric code used to identify the species/group.}
+\item{SCIENTIFICNAME}{The scientific name of the species/group.}
+\item{COMM}{The common name of the species.}
+\item{COMM_FR}{The french common name of the species.}
 \item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey.}
-\item{PREV_IDD_APHIAID}{If this species may have been grouped with one or more other species prior to IDD_CONFID_SINCE, this is the aphiaid that would have been used previously.}
+\item{RANK}{The taxonomic level for the value of SCIENTIFICNAME}
+\item{VALID_SPP}{Field indicating if this is a biological group worthy of an aphiaid (i.e. 0= obsolete, 1 = valid, 2 =invalid).}
+\item{COMMENTS}{Additional information.}
 \item{LGRP}{length grouping}
 \item{LFSEXED}{Length frequency counts by sex (Y/N)}
+\item{AUTHORITY}{The authority is the name of the scientist or scientists who first validly published the name.}
 \item{KINGDOM}{KINGDOM (for APHIAID from WoRMS)}
 \item{PHYLUM}{PHYLUM (for APHIAID from WoRMS)}
 \item{CLASS}{CLASS (for APHIAID from WoRMS)}
 \item{ORDER}{ORDER (for APHIAID from WoRMS)}
 \item{FAMILY}{FAMILY (for APHIAID from WoRMS)}
 \item{GENUS}{GENUS (for APHIAID from WoRMS)}
-\item{SPECIES}{SPECIES (for APHIAID from WoRMS)}
+\item{MODIFIED}{"Date of most recent edit to APHIAID information}
 }
 }
 \usage{

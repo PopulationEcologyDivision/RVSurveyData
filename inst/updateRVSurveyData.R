@@ -154,7 +154,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   # res$GSSPECIES_TAX <- GSExtract20220811$GSSPECIES_TAX
   
   # res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
-  res$GSSPECIES_NEW$ENTR <- NULL
+  res$GSSPECIES_NEW$ENTR <- res$GSSPECIES_NEW$REDIRECT_CODE <- NULL
   
   #rename the new species table to GSSPECIES
   names(res)[names(res) == "GSSPECIES_NEW"] <- "GSSPECIES"
