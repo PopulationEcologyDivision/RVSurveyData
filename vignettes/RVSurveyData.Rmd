@@ -6,8 +6,8 @@ author: "Mike McMahon"
 email: "Mike.McMahon@dfo-mpo.gc.ca"
 affiliation: "Population Ecology Division - Fisheries and Oceans Canada"
 output: 
- #   rmarkdown::html_vignette: default
-    pdf_document: 
+    rmarkdown::html_vignette: default
+    # pdf_document: 
     engine: pdfLaTeX
   
 vignette: >
