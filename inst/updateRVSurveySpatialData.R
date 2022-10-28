@@ -27,5 +27,25 @@ updateRVSurveySpatialData <- function(){
   strataMar4VSW_sf$fid <- NULL
   strataMar4VSW_sf <- st_transform(strataMar4VSW_sf, crs = 4326)
   usethis::use_data(strataMar4VSW_sf, overwrite = TRUE)
+  
+  #' created generously large area (based on the strata) 
+  #' for which to extract coastline and bathy
+  strataRng<- as.vector(sf::st_bbox(RVSurveyData::strataMar_sf))
+  longs<- grDevices::extendrange(r=c(strataRng[1],strataRng[3]),10)
+  lats <- grDevices::extendrange(r=c(strataRng[2],strataRng[4]),10)
+  
+  limits <- c(longs, lats)
+  
+  library(mapdata)
+  
+  maritimesLand = ggplot2::map_data("world2Hires",region = c('Canada', 'USA', 'France'), wrap = c(-180,180))
+  maritimesBathy <- marmap::fortify.bathy(marmap::getNOAA.bathy(lon1 = limits[1], 
+                                                          lon2 = limits[2], 
+                                                          lat1 = limits[3], 
+                                                          lat2 = limits[4], 
+                                                          resolution = 1))
+  
+  usethis::use_data(maritimesLand, overwrite = TRUE)
+  usethis::use_data(maritimesBathy, overwrite = TRUE)
 }
 

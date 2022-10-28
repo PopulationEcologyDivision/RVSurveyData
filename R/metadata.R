@@ -383,3 +383,30 @@
 #' \item{AREA_KM}{This is the area for each strata in km^2}
 #' }
 "strataMar4VSW_sf"
+
+#' @title maritimesLand Metadata
+#' @name maritimesLand
+#' @description This is a dataframe of the general area of the Maritimes coast, extracted via the \code{mapdata} package on Oct 28, 2022. Field descriptions taken from https://r-graphics.org/recipe-miscgraph-map.
+#' @docType data.frame
+#' @format a data.frame storing coordinates in DD
+#' \describe{
+#' \item{long}{Longitudes (dd)}
+#' \item{lat}{Latitudes (dd)}
+#' \item{group}{This is a grouping variable for each polygon. A region or subregion might have multiple polygons, for example, if it includes island}
+#' \item{order}{The order to connect each point within a group.}
+#' \item{region}{Roughly, the names of countries, although some other objects are present (such as some lakes).}
+#' \item{subregion}{The names of subregions within a region, which can contain multiple groups. For example, the Nova Scotia subregion includes many islands, each with its own group.}
+#' }
+"maritimesLand"
+
+#' @title maritimesBathy Metadata
+#' @name maritimesBathy
+#' @description This is a dataframe of the bathymetry of the Maritimes area, extracted via \code{getNOAA.bathy()} and \code{fortify.bathy()} functions of the \code{marmap} package on Oct 28, 2022.
+#' @docType data.frame
+#' @format a data.frame storing coordinates and depths in DD
+#' \describe{
+#' \item{x}{Longitudes (dd)}
+#' \item{y}{Latitudes (dd)}
+#' \item{z}{Depth (metrs)}
+#' }
+"maritimesBathy"
