@@ -24,9 +24,9 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
     return(field)
   }
   
-  if (!require(purrr)) install.packages('purrr')  
-  if (!require(dplyr)) install.packages('dplyr')
-  if (!require(devtools)) install.packages('devtools')
+  # if (!require(purrr)) install.packages('purrr')  
+  # if (!require(dplyr)) install.packages('dplyr')
+  # if (!require(devtools)) install.packages('devtools')
   
   library(purrr)
   library(dplyr)
