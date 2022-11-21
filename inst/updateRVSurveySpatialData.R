@@ -30,21 +30,26 @@ updateRVSurveySpatialData <- function(){
   
   #' created generously large area (based on the strata) 
   #' for which to extract coastline and bathy
-  strataRng<- as.vector(sf::st_bbox(RVSurveyData::strataMar_sf))
-  longs<- grDevices::extendrange(r=c(strataRng[1],strataRng[3]),10)
-  lats <- grDevices::extendrange(r=c(strataRng[2],strataRng[4]),10)
+  strataRng1<- as.vector(st_bbox(RVSurveyData::strataMar_sf))
+  strataRng2<- as.vector(st_bbox(RVSurveyData::strataMar4VSW_sf))
+  strataRng <- c(pmin(strataRng1[1], strataRng2[1]),
+                 pmin(strataRng1[2], strataRng2[2]),
+                 pmax(strataRng1[3], strataRng2[3]),
+                 pmax(strataRng1[4], strataRng2[4]))
   
-  limits <- c(longs, lats)
+  limits <-   c(roundDD2Min(strataRng[1],nearestMin=30, how = "floor"), 
+                roundDD2Min(strataRng[3],nearestMin=30, how = "ceiling"), 
+                roundDD2Min(strataRng[2],nearestMin=30, how = "floor"), 
+                roundDD2Min(strataRng[4],nearestMin=30, how = "ceiling"))
   
   library(mapdata)
   
-  maritimesLand = ggplot2::map_data("world2Hires",region = c('Canada', 'USA', 'France'), wrap = c(-180,180))
+  maritimesLand <- ggplot2::map_data("world2Hires",region = c('Canada', 'USA', 'France'), wrap = c(-180,180))
   maritimesBathy <- marmap::fortify.bathy(marmap::getNOAA.bathy(lon1 = limits[1], 
                                                           lon2 = limits[2], 
                                                           lat1 = limits[3], 
                                                           lat2 = limits[4], 
                                                           resolution = 1))
-  
   usethis::use_data(maritimesLand, overwrite = TRUE)
   usethis::use_data(maritimesBathy, overwrite = TRUE)
 }
