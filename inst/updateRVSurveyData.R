@@ -49,6 +49,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                 })
   names(res)<- allTbls
   saveRDS(res, "C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
+  # res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
   ## Various source tables need some tweaking to improve usability
   #GSINF: add decimal degrees version of coords
   res$GSINF$SLAT_DD  <- DDMM_to_DDDD(res$GSINF$SLAT)
@@ -90,7 +91,6 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                                                         !res$GSDET$MISSION %in% c("NED2016116","NED2016016") & 
                                                         !is.na(res$GSDET$FLEN),"FLEN"]*10
   
-  
   # 1 create table from GSDET with CLEN for each MISSION SETNO SPEC FLEN FSEX.
   #  - need to correct CLEN for size_class 1st
   #  - each set will be reduced to 1 record each combination of SPEC, FLEN and FSEX.
@@ -111,11 +111,11 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
   dataLF$CLEN_corr <- round(dataLF$CLEN_corr *(1.75/dataLF$DIST),6)
   dataLF$CLEN <- dataLF$DIST <- NULL
-  colnames(dataLF)[colnames(dataLF)=="CLEN_corr"] <- "CLEN"
-  dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN")]
+  colnames(dataLF)[colnames(dataLF)=="CLEN_corr"] <- "CLEN_std"
+  dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN_std")]
   
   dataLF <- dataLF %>%
-    group_by(MISSION, SETNO, SPEC, FSEX, FLEN) %>%
+    group_by(MISSION, SETNO, SPEC, FSEX, CLEN_std) %>%
     summarise(CLEN = sum(CLEN), .groups = "keep") %>%
     as.data.frame()
   
@@ -141,12 +141,20 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   
   #GSCAT: following combines numbers and weights for different size classes within a set
   #this drops MARKET (never populated) & REMARKS. 
-  res$GSCAT <- res$GSCAT %>%
+  tmpGSCAT <- res$GSCAT %>%
     group_by(MISSION, SETNO, SPEC) %>%
     summarise(TOTNO = sum(TOTNO),
               TOTWGT = sum(TOTWGT), .groups = "keep") %>%
     as.data.frame()
-  
+
+  #need to bump up CLEN by TOW dist!
+  tmpGSCAT <- merge(tmpGSCAT, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
+  #force NA dists to 1.75
+  tmpGSCAT[is.na(tmpGSCAT$DIST),"DIST"] <- 1.75
+  tmpGSCAT$TOTNO_std <- round(tmpGSCAT$TOTNO *(1.75/tmpGSCAT$DIST),6)
+  tmpGSCAT$TOTWGT_std <- round(tmpGSCAT$TOTWGT *(1.75/tmpGSCAT$DIST),6)
+  tmpGSCAT$TOTNO <- tmpGSCAT$TOTWGT <- NULL
+  res$GSCAT <- tmpGSCAT
   #GSSPECIES_20220624: remove temp, internal field and poorly used ENTR field
   # res<-list()
   # res$GSSPECIES_20220624<-GSExtract20220811$GSSPECIES_20220624
