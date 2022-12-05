@@ -116,7 +116,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   
   dataLF <- dataLF %>%
     group_by(MISSION, SETNO, SPEC, FSEX, CLEN_std) %>%
-    summarise(CLEN = sum(CLEN), .groups = "keep") %>%
+    summarise(CLEN_std = sum(CLEN_std), .groups = "keep") %>%
     as.data.frame()
   
   res$dataLF <- dataLF
@@ -147,13 +147,14 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
               TOTWGT = sum(TOTWGT), .groups = "keep") %>%
     as.data.frame()
 
-  #need to bump up CLEN by TOW dist!
+  #need to bump up TOTNO and TOTWGT by TOW dist!
   tmpGSCAT <- merge(tmpGSCAT, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   tmpGSCAT[is.na(tmpGSCAT$DIST),"DIST"] <- 1.75
   tmpGSCAT$TOTNO_std <- round(tmpGSCAT$TOTNO *(1.75/tmpGSCAT$DIST),6)
   tmpGSCAT$TOTWGT_std <- round(tmpGSCAT$TOTWGT *(1.75/tmpGSCAT$DIST),6)
   tmpGSCAT$TOTNO <- tmpGSCAT$TOTWGT <- NULL
+  tmpGSCAT$DIST <- NULL
   res$GSCAT <- tmpGSCAT
   #GSSPECIES_20220624: remove temp, internal field and poorly used ENTR field
   # res<-list()
