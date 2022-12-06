@@ -12,7 +12,8 @@ data.frame
 \item{SPEC}{Maritimes species code.}
 \item{FSEX}{Sex of the specimen.}
 \item{FLEN}{"Fish Length" - typically cm}
-\item{CLEN}{Count at Length.}
+\item{CLEN}{Count at Length, standardized for a 1.75NM tow.}
+\item{CLEN_RAW}{Count at Length, raw data.}
 }
 }
 \usage{

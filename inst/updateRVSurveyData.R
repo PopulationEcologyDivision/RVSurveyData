@@ -11,18 +11,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                              fn.oracle.password = NULL, 
                              fn.oracle.dsn = "PTRAN"
 ){
-  fathoms_to_meters <- function(field = NULL) {
-    field <- round(field*1.8288,2)
-    return(field)
-  }
-  
-  DDMM_to_DDDD <- function(field = NULL){
-    dfNm <-deparse(substitute(field))
-    field <- (as.numeric(substr(field,1,2)) +(field - as.numeric(substr(field,1,2))*100)/60)
-    if (grepl("LONG", dfNm)) field <- field*-1
-    field <- round(field,6)
-    return(field)
-  }
+
   
   # if (!require(purrr)) install.packages('purrr')  
   # if (!require(dplyr)) install.packages('dplyr')
@@ -48,8 +37,22 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                   ROracle::dbGetQuery(con, sqlStatement)
                 })
   names(res)<- allTbls
-  saveRDS(res, "C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
-  # res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
+  ts <- format.Date(Sys.Date(), format = "%Y%m%d")
+  saveRDS(res, paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds"))
+  #res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
+  fathoms_to_meters <- function(field = NULL) {
+    field <- round(field*1.8288,2)
+    return(field)
+  }
+  
+  DDMM_to_DDDD <- function(field = NULL){
+    dfNm <-deparse(substitute(field))
+    field <- (as.numeric(substr(field,1,2)) +(field - as.numeric(substr(field,1,2))*100)/60)
+    if (grepl("LONG", dfNm)) field <- field*-1
+    field <- round(field,6)
+    return(field)
+  }
+  
   ## Various source tables need some tweaking to improve usability
   #GSINF: add decimal degrees version of coords
   res$GSINF$SLAT_DD  <- DDMM_to_DDDD(res$GSINF$SLAT)
@@ -96,27 +99,28 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   #  - each set will be reduced to 1 record each combination of SPEC, FLEN and FSEX.
   
   dataLF <- res$GSDET
+  colnames(dataLF)[colnames(dataLF)=="CLEN"] <- "CLEN_RAW"
   #get the totwgt and sampwgt for every mission/set/spec/size_class combo, and use them to create
   #a ratio, and apply it to existing CLEN
   dataLF <- merge(dataLF, 
                   res$GSCAT[,c("MISSION", "SETNO", "SPEC", "SIZE_CLASS", "SAMPWGT","TOTWGT")],
                   all.x = T, by = c("MISSION", "SETNO", "SPEC", "SIZE_CLASS"))
-  dataLF$CLEN_corr <- dataLF$CLEN
+  dataLF$CLEN <- dataLF$CLEN_RAW
   #if non-na values exist for totwgt and sampwgt (and are >0), use them to bump up CLEN
-  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_corr"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN"],3)
+  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_RAW"],3)
   
   #need to bump up CLEN by TOW dist!
   dataLF <- merge(dataLF, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
-  dataLF$CLEN_corr <- round(dataLF$CLEN_corr *(1.75/dataLF$DIST),6)
-  dataLF$CLEN <- dataLF$DIST <- NULL
-  colnames(dataLF)[colnames(dataLF)=="CLEN_corr"] <- "CLEN_std"
-  dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN_std")]
+  dataLF$CLEN <- round(dataLF$CLEN_RAW *(1.75/dataLF$DIST),6)
+  dataLF$DIST <- NULL
+  dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN", "CLEN_RAW")]
   
   dataLF <- dataLF %>%
-    group_by(MISSION, SETNO, SPEC, FSEX, CLEN_std) %>%
-    summarise(CLEN_std = sum(CLEN_std), .groups = "keep") %>%
+    group_by(MISSION, SETNO, SPEC, FSEX) %>%
+    summarise(CLEN = sum(CLEN),
+              CLEN_RAW = sum(CLEN_RAW), .groups = "keep") %>%
     as.data.frame()
   
   res$dataLF <- dataLF
@@ -146,14 +150,15 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
     summarise(TOTNO = sum(TOTNO),
               TOTWGT = sum(TOTWGT), .groups = "keep") %>%
     as.data.frame()
-
+  colnames(tmpGSCAT)[colnames(tmpGSCAT)=="TOTNO"] <- "TOTNO_RAW"
+  colnames(tmpGSCAT)[colnames(tmpGSCAT)=="TOTWGT"] <- "TOTWGT_RAW"
   #need to bump up TOTNO and TOTWGT by TOW dist!
   tmpGSCAT <- merge(tmpGSCAT, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   tmpGSCAT[is.na(tmpGSCAT$DIST),"DIST"] <- 1.75
-  tmpGSCAT$TOTNO_std <- round(tmpGSCAT$TOTNO *(1.75/tmpGSCAT$DIST),6)
-  tmpGSCAT$TOTWGT_std <- round(tmpGSCAT$TOTWGT *(1.75/tmpGSCAT$DIST),6)
-  tmpGSCAT$TOTNO <- tmpGSCAT$TOTWGT <- NULL
+  tmpGSCAT$TOTNO <- round(tmpGSCAT$TOTNO_RAW *(1.75/tmpGSCAT$DIST),6)
+  tmpGSCAT$TOTWGT <- round(tmpGSCAT$TOTWGT_RAW *(1.75/tmpGSCAT$DIST),6)
+  # tmpGSCAT$TOTNO <- tmpGSCAT$TOTWGT <- NULL
   tmpGSCAT$DIST <- NULL
   res$GSCAT <- tmpGSCAT
   #GSSPECIES_20220624: remove temp, internal field and poorly used ENTR field
