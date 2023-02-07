@@ -213,25 +213,25 @@
 #' @docType data
 #' @format data.frame
 #' \describe{
-#' \item{APHIAID}{WoRMS Aphia ID code.}
 #' \item{CODE}{The numeric code used to identify the species/group.}
-#' \item{SCIENTIFICNAME}{The scientific name of the species/group.}
+#' \item{UUID}{A unique identifier used to identify the species/group.}
+#' \item{APHIAID}{WoRMS Aphia ID code.}
 #' \item{COMM}{The common name of the species.}
-#' \item{COMM_FR}{The french common name of the species.}
-#' \item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey.}
+#' \item{SPEC}{The scientific name of the species/group.}
+## \item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey.}
 #' \item{RANK}{The taxonomic level for the value of SCIENTIFICNAME}
-#' \item{VALID_SPP}{Field indicating if this is a biological group worthy of an aphiaid (i.e. 0= obsolete, 1 = valid, 2 =invalid).}
-#' \item{COMMENTS}{Additional information.}
-#' \item{LGRP}{length grouping}
-#' \item{LFSEXED}{Length frequency counts by sex (Y/N)}
-#' \item{AUTHORITY}{The authority is the name of the scientist or scientists who first validly published the name.}
+## \item{VALID_SPP}{Field indicating if this is a biological group worthy of an aphiaid (i.e. 0= obsolete, 1 = valid, 2 =invalid).}
+## \item{AUTHORITY}{The authority is the name of the scientist or scientists who first validly published the name.}
 #' \item{KINGDOM}{KINGDOM (for APHIAID from WoRMS)}
 #' \item{PHYLUM}{PHYLUM (for APHIAID from WoRMS)}
 #' \item{CLASS}{CLASS (for APHIAID from WoRMS)}
 #' \item{ORDER}{ORDER (for APHIAID from WoRMS)}
 #' \item{FAMILY}{FAMILY (for APHIAID from WoRMS)}
 #' \item{GENUS}{GENUS (for APHIAID from WoRMS)}
-#' \item{MODIFIED}{"Date of most recent edit to APHIAID information}
+#' \item{COMMENTS}{Additional information.}
+#' \item{LGRP}{length grouping}
+#' \item{LFSEXED}{Length frequency counts by sex (Y/N)}
+## \item{MODIFIED}{"Date of most recent edit to APHIAID information}
 #' }
 "GSSPECIES"
 
@@ -390,7 +390,7 @@
 #' @title maritimesLand Metadata
 #' @name maritimesLand
 #' @description This is a dataframe of the general area of the Maritimes coast, extracted via the \code{mapdata} package on Oct 28, 2022. Field descriptions taken from https://r-graphics.org/recipe-miscgraph-map.
-#' @docType data.frame
+#' @docType data
 #' @format a data.frame storing coordinates in DD
 #' \describe{
 #' \item{long}{Longitudes (dd)}
@@ -405,7 +405,7 @@
 #' @title maritimesBathy Metadata
 #' @name maritimesBathy
 #' @description This is a dataframe of the bathymetry of the Maritimes area, extracted via \code{getNOAA.bathy()} and \code{fortify.bathy()} functions of the \code{marmap} package on Oct 28, 2022.
-#' @docType data.frame
+#' @docType data
 #' @format a data.frame storing coordinates and depths in DD
 #' \describe{
 #' \item{x}{Longitudes (dd)}

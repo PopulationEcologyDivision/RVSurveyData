@@ -7,25 +7,21 @@
 \format{
 data.frame
 \describe{
-\item{APHIAID}{WoRMS Aphia ID code.}
 \item{CODE}{The numeric code used to identify the species/group.}
-\item{SCIENTIFICNAME}{The scientific name of the species/group.}
+\item{UUID}{A unique identifier used to identify the species/group.}
+\item{APHIAID}{WoRMS Aphia ID code.}
 \item{COMM}{The common name of the species.}
-\item{COMM_FR}{The french common name of the species.}
-\item{IDD_CONFID_SINCE}{A date indicating the point in time at which this species was confidently and consistently identified during the survey.}
+\item{SPEC}{The scientific name of the species/group.}
 \item{RANK}{The taxonomic level for the value of SCIENTIFICNAME}
-\item{VALID_SPP}{Field indicating if this is a biological group worthy of an aphiaid (i.e. 0= obsolete, 1 = valid, 2 =invalid).}
-\item{COMMENTS}{Additional information.}
-\item{LGRP}{length grouping}
-\item{LFSEXED}{Length frequency counts by sex (Y/N)}
-\item{AUTHORITY}{The authority is the name of the scientist or scientists who first validly published the name.}
 \item{KINGDOM}{KINGDOM (for APHIAID from WoRMS)}
 \item{PHYLUM}{PHYLUM (for APHIAID from WoRMS)}
 \item{CLASS}{CLASS (for APHIAID from WoRMS)}
 \item{ORDER}{ORDER (for APHIAID from WoRMS)}
 \item{FAMILY}{FAMILY (for APHIAID from WoRMS)}
 \item{GENUS}{GENUS (for APHIAID from WoRMS)}
-\item{MODIFIED}{"Date of most recent edit to APHIAID information}
+\item{COMMENTS}{Additional information.}
+\item{LGRP}{length grouping}
+\item{LFSEXED}{Length frequency counts by sex (Y/N)}
 }
 }
 \usage{
