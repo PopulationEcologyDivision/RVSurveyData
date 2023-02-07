@@ -27,7 +27,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
               "GSFORCE", "GSGEAR", "GSHOWOBT", "GSINF", "GSMATURITY", 
               "GSMISSIONS", "GSSEX","GSSPEC", 
               "GSSTRATUM", "GSWARPOUT", "GSXTYPE",
-             "GSSPECIES_NEW","GSSPECIES_APHIAS","GSSPEC")
+             "GSSPECIES_ANDES","GSSPEC")
   
   # make connection and extract all data to a list
   con <- ROracle::dbConnect(DBI::dbDriver("Oracle"), groundfish.username, groundfish.password, oracle.dsn)
