@@ -38,8 +38,10 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                 })
   names(res)<- allTbls
   ts <- format.Date(Sys.Date(), format = "%Y%m%d")
-  saveRDS(res, paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds"))
-  #res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20221003.rds")
+  nm= paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds")
+  saveRDS(res, file = nm)
+  message("Saved the raw extraction to ", nm)
+  res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtractYYYYMMDD.rds")
   fathoms_to_meters <- function(field = NULL) {
     field <- round(field*1.8288,2)
     return(field)
@@ -168,14 +170,15 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   # res$GSSPECIES_TAX <- GSExtract20220811$GSSPECIES_TAX
   
   # res$GSSPECIES_20220624$N_OCCURENCES_GSCAT <- NULL
-  res$GSSPECIES_NEW$ENTR <- res$GSSPECIES_NEW$REDIRECT_CODE <- NULL
+  # res$GSSPECIES_NEW$ENTR <- res$GSSPECIES_NEW$REDIRECT_CODE <- NULL
   
   #rename the new species table to GSSPECIES
   names(res)[names(res) == "GSSPECIES_NEW"] <- "GSSPECIES"
+  names(res)[names(res) == "GSSPECIES_ANDES"] <- "GSSPECIES"
   
   # colnames(res$GSSPECIES)[colnames(res$GSSPECIES)=="CODE_MAR"] <- "CODE"
   res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPEC[, c("SPEC","LGRP","LFSEXED")], by.x= "CODE", by.y = "SPEC", all.x=T)
-  res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_APHIAS[,!names(res$GSSPECIES_APHIAS)%in% c("SCIENTIFICNAME","RANK")], by = "APHIAID", all.x=T)
+  # res$GSSPECIES <-  merge(res$GSSPECIES, res$GSSPECIES_APHIAS[,!names(res$GSSPECIES_APHIAS)%in% c("SCIENTIFICNAME","RANK")], by = "APHIAID", all.x=T)
   
   #add GSCAT COUNT?
   if (F){
@@ -187,7 +190,8 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
     )
     res$GSSPECIES <- merge(res$GSSPECIES, sppCounter_CAT, all.x=T)
   }
-  res$GSSPEC <- res$GSSPECIES_APHIAS <- NULL
+  # res$GSSPEC <- res$GSSPECIES_APHIAS <- NULL
+  res$GSSPEC <- NULL
   # add all of the list objects to the package
   purrr::walk2(res, names(res), function(obj, name) {
     assign(name, obj)
