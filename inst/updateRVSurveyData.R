@@ -192,6 +192,8 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   }
   # res$GSSPEC <- res$GSSPECIES_APHIAS <- NULL
   res$GSSPEC <- NULL
+  # confusing that SPEC means CODE in one table, but SCIENTIFIC NAME in another - remove confusion (or adding more?)
+  colnames(res$GSSPECIES)[colnames(res$GSSPECIES)=="SPEC"] <- "SCI_NAME"
   # add all of the list objects to the package
   purrr::walk2(res, names(res), function(obj, name) {
     assign(name, obj)
