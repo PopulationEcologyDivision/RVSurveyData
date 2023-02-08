@@ -173,7 +173,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   # res$GSSPECIES_NEW$ENTR <- res$GSSPECIES_NEW$REDIRECT_CODE <- NULL
   
   #rename the new species table to GSSPECIES
-  names(res)[names(res) == "GSSPECIES_NEW"] <- "GSSPECIES"
+  # names(res)[names(res) == "GSSPECIES_NEW"] <- "GSSPECIES"
   names(res)[names(res) == "GSSPECIES_ANDES"] <- "GSSPECIES"
   
   # colnames(res$GSSPECIES)[colnames(res$GSSPECIES)=="CODE_MAR"] <- "CODE"
