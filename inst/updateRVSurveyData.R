@@ -41,7 +41,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   nm= paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds")
   saveRDS(res, file = nm)
   message("Saved the raw extraction to ", nm)
-  res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtractYYYYMMDD.rds")
+  # res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtractYYYYMMDD.rds")
   fathoms_to_meters <- function(field = NULL) {
     field <- round(field*1.8288,2)
     return(field)
@@ -120,7 +120,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN", "CLEN_RAW")]
   
   dataLF <- dataLF %>%
-    group_by(MISSION, SETNO, SPEC, FSEX) %>%
+    group_by(MISSION, SETNO, SPEC, FSEX, FLEN) %>%
     summarise(CLEN = sum(CLEN),
               CLEN_RAW = sum(CLEN_RAW), .groups = "keep") %>%
     as.data.frame()
