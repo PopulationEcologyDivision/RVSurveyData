@@ -41,7 +41,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   nm= paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds")
   saveRDS(res, file = nm)
   message("Saved the raw extraction to ", nm)
-  # res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtractYYYYMMDD.rds")
+  if (F) res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20230207.rds")
   fathoms_to_meters <- function(field = NULL) {
     field <- round(field*1.8288,2)
     return(field)
@@ -101,28 +101,33 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   #  - each set will be reduced to 1 record each combination of SPEC, FLEN and FSEX.
   
   dataLF <- res$GSDET
-  colnames(dataLF)[colnames(dataLF)=="CLEN"] <- "CLEN_RAW"
+  
+  dataLF <- dataLF[!is.na(dataLF$FLEN), c("MISSION", "SETNO", "SPEC", "SIZE_CLASS", "FSEX","FLEN", "CLEN")]
+  #if sex is na, it's fair to say we don't know it.
+  dataLF[is.na(dataLF$FSEX), "FSEX"] <- 0
+  dataLF <- dataLF %>%
+    group_by(MISSION, SETNO, SPEC, SIZE_CLASS, FSEX, FLEN) %>%
+    summarise(CLEN_comb = sum(CLEN), .groups = "keep") %>%
+    as.data.frame()
   #get the totwgt and sampwgt for every mission/set/spec/size_class combo, and use them to create
   #a ratio, and apply it to existing CLEN
   dataLF <- merge(dataLF, 
                   res$GSCAT[,c("MISSION", "SETNO", "SPEC", "SIZE_CLASS", "SAMPWGT","TOTWGT")],
                   all.x = T, by = c("MISSION", "SETNO", "SPEC", "SIZE_CLASS"))
-  dataLF$CLEN <- dataLF$CLEN_RAW
-  #if non-na values exist for totwgt and sampwgt (and are >0), use them to bump up CLEN
-  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_RAW"],3)
-  
+  dataLF$CLEN_new <- dataLF$CLEN_comb
+  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_new"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_comb"],3)
+
   #need to bump up CLEN by TOW dist!
   dataLF <- merge(dataLF, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
-  dataLF$CLEN <- round(dataLF$CLEN_RAW *(1.75/dataLF$DIST),6)
-  dataLF$DIST <- NULL
-  dataLF <- dataLF[,c("MISSION", "SETNO", "SPEC", "FLEN", "FSEX", "CLEN", "CLEN_RAW")]
+  dataLF$CLEN <- round(dataLF$CLEN_new *(1.75/dataLF$DIST),6)
+  dataLF$DIST <- dataLF$SAMPWGT <- dataLF$TOTWGT <- dataLF$CLEN_comb <- dataLF$CLEN_new <- NULL
   
+  #now that we have correct numbers at length for all lengths, we can drop add them (and drop size classes)
   dataLF <- dataLF %>%
     group_by(MISSION, SETNO, SPEC, FSEX, FLEN) %>%
-    summarise(CLEN = sum(CLEN),
-              CLEN_RAW = sum(CLEN_RAW), .groups = "keep") %>%
+    summarise(CLEN = sum(CLEN), .groups = "keep") %>%
     as.data.frame()
   
   res$dataLF <- dataLF
@@ -132,15 +137,12 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   #  - multiple internal, age-related fields are being dropped
   
   dataDETS <- res$GSDET
-  dataDETS <- dataDETS[,!names(dataDETS) %in% c("CLEN", "SIZE_CLASS")]
-  # remove internal fields
-  dataDETS <- dataDETS[,!names(dataDETS) %in% c("NANN", "EDGE", "CHKMRK", "AGER", "REMARKS" )]
-  # keep only informative records
-  dataDETS <- dataDETS[!is.na(dataDETS$FLEN) | !is.na(dataDETS$FSEX)| !is.na(dataDETS$FMAT)| !is.na(dataDETS$FWT)| !is.na(dataDETS$AGE),]
-  #reorder columns
+  #if sex is na, it's fair to say we don't know it.
+  dataDETS[is.na(dataDETS$FSEX), "FSEX"] <- 0
   dataDETS <- dataDETS[,c("MISSION", "SETNO", "SPEC", "FSHNO", "SPECIMEN_ID", "FLEN", "FSEX", "FMAT",  "FWT", "AGMAT", "AGE")]
-  
-  
+  # keep only informative records
+  dataDETS <- dataDETS[!is.na(dataDETS$FLEN) |  !is.na(dataDETS$FMAT)| !is.na(dataDETS$FWT)| !is.na(dataDETS$AGE),]
+
   res$dataDETS <- dataDETS
   res$GSDET <-NULL
   rm(dataDETS)
