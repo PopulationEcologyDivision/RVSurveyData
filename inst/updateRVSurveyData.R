@@ -107,27 +107,27 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   dataLF[is.na(dataLF$FSEX), "FSEX"] <- 0
   dataLF <- dataLF %>%
     group_by(MISSION, SETNO, SPEC, SIZE_CLASS, FSEX, FLEN) %>%
-    summarise(CLEN_comb = sum(CLEN), .groups = "keep") %>%
+    summarise(CLEN_RAW = sum(CLEN), .groups = "keep") %>%
     as.data.frame()
   #get the totwgt and sampwgt for every mission/set/spec/size_class combo, and use them to create
   #a ratio, and apply it to existing CLEN
   dataLF <- merge(dataLF, 
                   res$GSCAT[,c("MISSION", "SETNO", "SPEC", "SIZE_CLASS", "SAMPWGT","TOTWGT")],
                   all.x = T, by = c("MISSION", "SETNO", "SPEC", "SIZE_CLASS"))
-  dataLF$CLEN_new <- dataLF$CLEN_comb
-  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_new"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_comb"],3)
+  dataLF$CLEN_new <- dataLF$CLEN_RAW
+  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_new"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_RAW"],3)
 
   #need to bump up CLEN by TOW dist!
   dataLF <- merge(dataLF, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
   dataLF$CLEN <- round(dataLF$CLEN_new *(1.75/dataLF$DIST),6)
-  dataLF$DIST <- dataLF$SAMPWGT <- dataLF$TOTWGT <- dataLF$CLEN_comb <- dataLF$CLEN_new <- NULL
+  dataLF$DIST <- dataLF$SAMPWGT <- dataLF$TOTWGT <- dataLF$CLEN_new <- NULL
   
   #now that we have correct numbers at length for all lengths, we can drop add them (and drop size classes)
   dataLF <- dataLF %>%
     group_by(MISSION, SETNO, SPEC, FSEX, FLEN) %>%
-    summarise(CLEN = sum(CLEN), .groups = "keep") %>%
+    summarise(CLEN_RAW = sum(CLEN_RAW), CLEN = sum(CLEN), .groups = "keep") %>%
     as.data.frame()
   
   res$dataLF <- dataLF
