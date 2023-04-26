@@ -43,7 +43,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   message("Saved the raw extraction to ", nm)
   if (F) res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20230207.rds")
   fathoms_to_meters <- function(field = NULL) {
-    field <- round(field*1.8288,2)
+    field <- round(field*1.8288,3)
     return(field)
   }
   
@@ -115,19 +115,19 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
                   res$GSCAT[,c("MISSION", "SETNO", "SPEC", "SIZE_CLASS", "SAMPWGT","TOTWGT")],
                   all.x = T, by = c("MISSION", "SETNO", "SPEC", "SIZE_CLASS"))
   dataLF$CLEN_new <- dataLF$CLEN_RAW
-  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_new"] <- round((dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_RAW"],3)
+  dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_new"] <- (dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"TOTWGT"]/dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT)  & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"SAMPWGT"])*dataLF[!is.na(dataLF$TOTWGT) & !is.na(dataLF$SAMPWGT) & (dataLF$SAMPWGT> 0) & (dataLF$TOTWGT>0),"CLEN_RAW"]
 
   #need to bump up CLEN by TOW dist!
   dataLF <- merge(dataLF, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   dataLF[is.na(dataLF$DIST),"DIST"] <- 1.75
-  dataLF$CLEN <- round(dataLF$CLEN_new *(1.75/dataLF$DIST),6)
-  dataLF$DIST <- dataLF$SAMPWGT <- dataLF$TOTWGT <- dataLF$CLEN_new <- NULL
+  dataLF$CLEN <- round(dataLF$CLEN_new *(1.75/dataLF$DIST),7)
+  dataLF$DIST <- dataLF$SAMPWGT <- dataLF$TOTWGT <- dataLF$CLEN_new <- dataLF$CLEN_RAW <- NULL
   
   #now that we have correct numbers at length for all lengths, we can drop add them (and drop size classes)
   dataLF <- dataLF %>%
     group_by(MISSION, SETNO, SPEC, FSEX, FLEN) %>%
-    summarise(CLEN_RAW = sum(CLEN_RAW), CLEN = sum(CLEN), .groups = "keep") %>%
+    summarise(CLEN = sum(CLEN), .groups = "keep") %>%
     as.data.frame()
   
   res$dataLF <- dataLF
@@ -160,8 +160,8 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   tmpGSCAT <- merge(tmpGSCAT, res$GSINF[,c("MISSION", "SETNO", "DIST")],all.x = T, by = c("MISSION", "SETNO"))
   #force NA dists to 1.75
   tmpGSCAT[is.na(tmpGSCAT$DIST),"DIST"] <- 1.75
-  tmpGSCAT$TOTNO <- round(tmpGSCAT$TOTNO_RAW *(1.75/tmpGSCAT$DIST),6)
-  tmpGSCAT$TOTWGT <- round(tmpGSCAT$TOTWGT_RAW *(1.75/tmpGSCAT$DIST),6)
+  tmpGSCAT$TOTNO <- round(tmpGSCAT$TOTNO_RAW *(1.75/tmpGSCAT$DIST),7)
+  tmpGSCAT$TOTWGT <- round(tmpGSCAT$TOTWGT_RAW *(1.75/tmpGSCAT$DIST),7)
   # tmpGSCAT$TOTNO <- tmpGSCAT$TOTWGT <- NULL
   tmpGSCAT$DIST <- NULL
   res$GSCAT <- tmpGSCAT
