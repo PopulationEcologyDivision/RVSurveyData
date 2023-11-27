@@ -41,7 +41,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   nm= paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds")
   saveRDS(res, file = nm)
   message("Saved the raw extraction to ", nm)
-  if (F) res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20230207.rds")
+  if (F) res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20231127.rds")
   fathoms_to_meters <- function(field = NULL) {
     field <- round(field*1.8288,3)
     return(field)
@@ -194,6 +194,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   }
   # res$GSSPEC <- res$GSSPECIES_APHIAS <- NULL
   res$GSSPEC <- NULL
+  rm(GSSPEC)
   # confusing that SPEC means CODE in one table, but SCIENTIFIC NAME in another - remove confusion (or adding more?)
   colnames(res$GSSPECIES)[colnames(res$GSSPECIES)=="SPEC"] <- "SCI_NAME"
   # add all of the list objects to the package
