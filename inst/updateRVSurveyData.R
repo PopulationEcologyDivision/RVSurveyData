@@ -41,7 +41,7 @@ updateRVSurveyData<-function(fn.oracle.username = NULL,
   nm= paste0("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract",ts,".rds")
   saveRDS(res, file = nm)
   message("Saved the raw extraction to ", nm)
-  if (F) res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20230207.rds")
+  if (F) res <- readRDS("C:/git/PopulationEcologyDivision/RVSurveyData/inst/GSExtract20231127.rds")
   fathoms_to_meters <- function(field = NULL) {
     field <- round(field*1.8288,3)
     return(field)
